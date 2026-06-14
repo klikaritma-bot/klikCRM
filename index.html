@@ -127,6 +127,7 @@
             </ul>
             <div class="position-absolute bottom-0 w-100 p-3">
                 <button class="btn btn-danger w-100 mb-3" onclick="logout()"><i class="bi bi-box-arrow-left"></i> Logout</button>
+                <div class="text-white-50 small text-center">Dev by klikSistem.com</div>
             </div>
         </nav>
 
@@ -182,7 +183,7 @@
                     <div class="card-body p-3 p-md-4">
                         <div class="row g-3 align-items-center">
                             <div class="col-12 col-md-3"><h5 class="card-title fw-bold mb-0"><i class="bi bi-funnel"></i> Filter Data</h5></div>
-                            <div class="col-6 col-md-4"><select class="form-select" id="filterProduct" onchange="renderFollowUpTable()"><option value="ALL">Semua Produk</option><option value="Sistem ERP">Sistem ERP</option><option value="Sistem Custom">Sistem Custom</option><option value="Sistem Gereja">Sistem Gereja</option><option value="Konsultan">Konsultan</option></select></div>
+                            <div class="col-6 col-md-4"><select class="form-select" id="filterProduct" onchange="renderFollowUpTable()"><option value="ALL">Semua Produk</option></select></div>
                             <div class="col-6 col-md-4"><select class="form-select" id="filterStatus" onchange="renderFollowUpTable()"><option value="ALL">Semua Status</option><option value="Cold Lead">Cold Lead</option><option value="Warm Lead">Warm Lead</option><option value="Hot Lead">Hot Lead</option><option value="Loyal">Loyal Client</option></select></div>
                         </div>
                     </div>
@@ -232,7 +233,9 @@
                             <div class="col-md-6"><label class="form-label">Nama Perusahaan</label><input type="text" class="form-control" id="company" required></div>
                             <div class="col-md-6"><label class="form-label">Nama PIC</label><input type="text" class="form-control" id="pic" required></div>
                             <div class="col-md-6"><label class="form-label">Nomor WA / HP</label><input type="text" class="form-control" id="phone" required></div>
-                            <div class="col-md-6"><label class="form-label">Produk Diminati</label><select class="form-select" id="product"><option value="Sistem ERP">Sistem ERP</option><option value="Sistem Custom">Sistem Custom</option><option value="Sistem Gereja">Sistem Gereja</option><option value="Konsultan">Konsultan</option></select></div>
+                            
+                            <div class="col-md-6"><label class="form-label">Produk Diminati</label><input type="text" class="form-control" id="product" placeholder="Ketik nama produk..." required></div>
+                            
                             <div class="col-md-6"><label class="form-label">Status Lead</label><select class="form-select" id="status"><option value="Cold Lead">Cold Lead</option><option value="Warm Lead">Warm Lead</option><option value="Hot Lead">Hot Lead</option><option value="Proposal">Proposal</option><option value="Loyal">Loyal</option><option value="Lost">Lost</option></select></div>
                             <div class="col-md-6"><label class="form-label">Potensi Nilai Project (Rp)</label><input type="number" class="form-control" id="value" required></div>
                             <div class="col-md-6"><label class="form-label">Sumber Lead</label><select class="form-select" id="source"><option value="Website">Website</option><option value="Referral">Referral</option><option value="Gereja">Gereja</option><option value="Ads">Ads</option><option value="Event">Event</option></select></div>
@@ -269,7 +272,7 @@
 
     <script>
         // =========================================================================
-        // PENGAMAN ERROR GLOBAL (Agar jika ada error API, muncul Pop-up)
+        // PENGAMAN ERROR GLOBAL
         window.addEventListener('unhandledrejection', function(event) {
             alert("Terjadi Kendala Koneksi: " + event.reason.message);
         });
@@ -300,9 +303,6 @@
             }
         });
 
-        // ==========================================================
-        // FUNGSI LOGIN
-        // ==========================================================
         async function manualLogin() {
             const inputId = document.getElementById('licenseKey').value.trim();
             if (!inputId) {
@@ -344,7 +344,7 @@
 
         async function executeLogin(id) {
             currentDbId = id; 
-            startLoading("Memverifikasi Lisensi..."); // <-- INI YANG KEMARIN BIKIN ERROR (Dulu tertulis showLoading)
+            startLoading("Memverifikasi Lisensi..."); 
             try {
                 db = await apiCall("getAllData"); 
                 
@@ -369,7 +369,7 @@
                 if(typeof Swal !== 'undefined') Swal.fire('Akses Ditolak', errMsg, 'error');
                 else alert('Akses Ditolak: ' + errMsg);
             } finally { 
-                endLoading(); // <-- INI YANG KEMARIN BIKIN ERROR (Dulu tertulis hideLoading)
+                endLoading(); 
             }
         }
 
@@ -378,7 +378,6 @@
             location.reload(); 
         }
 
-        // --- UI RENDER LOGIC ---
         function switchView(viewId) {
             document.querySelectorAll('.sidebar .nav-link').forEach(link => { link.classList.remove('active'); if(link.getAttribute('onclick').includes(viewId)) link.classList.add('active'); });
             document.querySelectorAll('.bottom-nav-link').forEach(link => { link.classList.remove('active'); if(link.getAttribute('onclick').includes(viewId)) link.classList.add('active'); });
@@ -394,13 +393,40 @@
             window.scrollTo(0, 0);
         }
 
-        // --- NAMA FUNGSI LOADING YANG BENAR ---
         function startLoading(text = "Memuat...") { document.getElementById('loading-text').innerText = text; document.getElementById('loading-overlay').style.display = 'flex'; }
         function endLoading() { document.getElementById('loading-overlay').style.display = 'none'; }
-        
         function formatRupiah(number) { if(isNaN(number) || number === null || number === '') return "Rp 0"; return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(number); }
 
-        function renderUI() { renderDashboard(); renderLeadsTable(); renderFollowUpTable(); renderKanbanBoard(); renderProjectsTable(); }
+        function renderUI() { 
+            updateProductFilter(); // Update list dropdown di menu follow up
+            renderDashboard(); 
+            renderLeadsTable(); 
+            renderFollowUpTable(); 
+            renderKanbanBoard(); 
+            renderProjectsTable(); 
+        }
+
+        // --- FUNGSI UPDATE FILTER PRODUK DINAMIS ---
+        function updateProductFilter() {
+            const filterSelect = document.getElementById('filterProduct');
+            if(!filterSelect) return;
+            const currentVal = filterSelect.value;
+            
+            // Ambil nama produk yang unik dan tidak kosong dari database lead
+            const uniqueProducts = [...new Set(db.leads.filter(l => l.product && l.product.trim() !== '').map(l => l.product.trim()))];
+            
+            let htmlOptions = `<option value="ALL">Semua Produk</option>`;
+            uniqueProducts.forEach(prod => {
+                htmlOptions += `<option value="${prod}">${prod}</option>`;
+            });
+            
+            filterSelect.innerHTML = htmlOptions;
+            
+            // Kembalikan pilihan sebelumnya jika produk masih ada
+            if(uniqueProducts.includes(currentVal)) {
+                filterSelect.value = currentVal;
+            }
+        }
 
         function renderDashboard() {
             document.getElementById('dash-leads').innerText = db.leads.length;
@@ -491,7 +517,7 @@
                                 let idx = db.pipeline.findIndex(p => p.id === itemId);
                                 if(idx > -1) { 
                                     db.pipeline[idx].stage = newStage; renderDashboard(); renderProjectsTable(); renderKanbanBoard();
-                                    if(!isSimulation) { try { await apiCall("savePipeline", db.pipeline[idx]); } catch(e) {} }
+                                    if(!isSimulation) { try { await apiCall("savePipeline", db.pipeline[idx]); } catch(e) { console.error("Pipeline update failed", e); } }
                                 }
                             }
                         }
