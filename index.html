@@ -269,6 +269,11 @@
 
     <script>
         // =========================================================================
+        // PENGAMAN ERROR GLOBAL (Agar jika ada error API, muncul Pop-up)
+        window.addEventListener('unhandledrejection', function(event) {
+            alert("Terjadi Kendala Koneksi: " + event.reason.message);
+        });
+
         // PENTING: MASUKKAN URL WEB APP DARI KLIKCRM_CORE_ENGINE ANDA DI SINI
         const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwfM94k2ydHK9BST3WNrCMAYGbraZxjUjt4yiHbeitNpd_oeLieaOC7j7bplLwQ1o3nbQ/exec"; 
         // =========================================================================
@@ -281,14 +286,13 @@
         let leadModalInstance, logModalInstance, funnelChartInstance;
         const STAGES = ["Prospecting", "Need Analysis", "Presentation", "Proposal Sent", "Negotiation", "Won", "Lost"];
 
-        // Eksekusi Setelah Halaman Dimuat
         document.addEventListener("DOMContentLoaded", () => {
             try {
                 if (typeof bootstrap !== 'undefined') {
                     leadModalInstance = new bootstrap.Modal(document.getElementById('leadModal'));
                     logModalInstance = new bootstrap.Modal(document.getElementById('logModal'));
                 }
-            } catch(e) { console.error("Modal Setup Error:", e); }
+            } catch(e) {}
 
             if (currentDbId) { 
                 document.getElementById('licenseKey').value = currentDbId; 
@@ -297,12 +301,9 @@
         });
 
         // ==========================================================
-        // FUNGSI LOGIN PALING PRIMITIF & KEBAL ERROR
+        // FUNGSI LOGIN
         // ==========================================================
         async function manualLogin() {
-            // POP-UP INI AKAN MUNCUL SEBAGAI BUKTI TOMBOL BERFUNGSI
-            console.log("Tombol Akses Ditekan!");
-            
             const inputId = document.getElementById('licenseKey').value.trim();
             if (!inputId) {
                 alert("Mohon masukkan ID Database terlebih dahulu!");
@@ -311,7 +312,6 @@
             await executeLogin(inputId);
         }
 
-        // Fetch API / Simulasi
         async function apiCall(actionName, payloadData = null) {
             if (GAS_API_URL === "" || GAS_API_URL.includes("MASUKKAN_URL")) {
                 isSimulation = true;
@@ -330,19 +330,21 @@
                 });
             }
 
-            try {
-                const response = await fetch(GAS_API_URL, {
-                    method: 'POST', body: JSON.stringify({ action: actionName, dbId: currentDbId, data: payloadData }), headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-                });
-                const result = await response.json();
-                if (result.status === "error") throw new Error(result.message);
-                return typeof result.data === 'string' ? JSON.parse(result.data) : result.data;
-            } catch (error) { throw error; }
+            const response = await fetch(GAS_API_URL, {
+                method: 'POST', body: JSON.stringify({ action: actionName, dbId: currentDbId, data: payloadData }), headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+            });
+            const textResult = await response.text();
+            let result;
+            try { result = JSON.parse(textResult); } 
+            catch(err) { throw new Error("URL API tidak valid atau Google menolak akses."); }
+
+            if (result.status === "error") throw new Error(result.message);
+            return typeof result.data === 'string' ? JSON.parse(result.data) : result.data;
         }
 
-        // Proses Login Utama
         async function executeLogin(id) {
-            currentDbId = id; showLoading("Memverifikasi Lisensi...");
+            currentDbId = id; 
+            startLoading("Memverifikasi Lisensi..."); // <-- INI YANG KEMARIN BIKIN ERROR (Dulu tertulis showLoading)
             try {
                 db = await apiCall("getAllData"); 
                 
@@ -366,7 +368,9 @@
                 const errMsg = error.message || "Gagal menghubungi server API";
                 if(typeof Swal !== 'undefined') Swal.fire('Akses Ditolak', errMsg, 'error');
                 else alert('Akses Ditolak: ' + errMsg);
-            } finally { hideLoading(); }
+            } finally { 
+                endLoading(); // <-- INI YANG KEMARIN BIKIN ERROR (Dulu tertulis hideLoading)
+            }
         }
 
         function logout() { 
@@ -390,8 +394,10 @@
             window.scrollTo(0, 0);
         }
 
+        // --- NAMA FUNGSI LOADING YANG BENAR ---
         function startLoading(text = "Memuat...") { document.getElementById('loading-text').innerText = text; document.getElementById('loading-overlay').style.display = 'flex'; }
         function endLoading() { document.getElementById('loading-overlay').style.display = 'none'; }
+        
         function formatRupiah(number) { if(isNaN(number) || number === null || number === '') return "Rp 0"; return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(number); }
 
         function renderUI() { renderDashboard(); renderLeadsTable(); renderFollowUpTable(); renderKanbanBoard(); renderProjectsTable(); }
@@ -485,7 +491,7 @@
                                 let idx = db.pipeline.findIndex(p => p.id === itemId);
                                 if(idx > -1) { 
                                     db.pipeline[idx].stage = newStage; renderDashboard(); renderProjectsTable(); renderKanbanBoard();
-                                    if(!isSimulation) { try { await apiCall("savePipeline", db.pipeline[idx]); } catch(e) { console.error("Pipeline update failed", e); } }
+                                    if(!isSimulation) { try { await apiCall("savePipeline", db.pipeline[idx]); } catch(e) {} }
                                 }
                             }
                         }
