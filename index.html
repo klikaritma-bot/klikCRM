@@ -6,220 +6,183 @@
     <title>klikCRM Pro - Enterprise Cloud</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    
     <style>
-        :root { 
-            --primary: #0a192f; 
-            --primary-light: #112240;
-            --brand-color: #FFB800; /* Kuning yang lebih tajam dan solid */
-            --bg-color: #f3f4f6; 
+        :root {
+            --primary: #0a192f; --primary-light: #112240; --brand-color: #FFB800; 
+            --secondary: #1e88e5; --accent: #10b981; --bg-color: #f3f4f6;
+            --text-dark: #1f2937; --text-muted: #6b7280;
         }
-        
-        body { 
-            background-color: var(--bg-color); 
-            font-family: 'Segoe UI', system-ui, sans-serif; 
-            overflow-x: hidden; 
-        }
-        
-        /* LOGIN SCREEN STYLES DENGAN KESAN PREMIUM */
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-dark); overflow-x: hidden; }
+
+        /* --- LOGIN SCREEN STYLES --- */
         #login-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            /* Latar belakang dengan gradien radial yang elegan */
             background: radial-gradient(circle at top right, var(--primary-light), var(--primary));
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             z-index: 2000; transition: opacity 0.5s;
         }
-
         .login-box { 
-            background: rgba(255, 255, 255, 0.98); 
-            padding: 45px 40px; 
-            border-radius: 20px; 
-            width: 100%; 
-            max-width: 420px; 
-            /* Shadow yang lebih dalam dengan sentuhan warna brand */
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(255, 184, 0, 0.05); 
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.98); padding: 45px 40px; border-radius: 20px; 
+            width: 100%; max-width: 420px; box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(255, 184, 0, 0.05); 
         }
+        .brand-text { color: var(--primary); font-weight: 800; font-size: 2rem; letter-spacing: -0.5px; }
+        .btn-login { background: var(--primary); color: white; font-weight: 600; transition: all 0.3s ease; }
+        .btn-login:hover { background: var(--brand-color); color: var(--primary); transform: translateY(-2px); }
 
-        .brand-text {
-            color: var(--primary);
-            font-weight: 800;
-            font-size: 2rem;
-            letter-spacing: -0.5px;
-        }
-
-        .btn-login {
-            background: var(--primary);
-            color: white;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            border: none;
-            transition: all 0.3s ease;
-        }
-
-        .btn-login:hover {
-            background: var(--brand-color);
-            color: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 15px rgba(255, 184, 0, 0.3);
-        }
-
-        .trust-badge {
-            display: inline-block;
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            padding: 8px 15px;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            color: #6c757d;
-            font-weight: 500;
-            margin-top: 15px;
-        }
-
-        /* FOOTER STYLES */
-        .login-footer {
-            margin-top: 40px;
-            text-align: center;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.85rem;
-            line-height: 1.8;
-        }
-
-        .login-footer a {
-            color: var(--brand-color);
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.2s;
-        }
-
-        .login-footer a:hover {
-            color: white;
-        }
-        
-        /* APP STYLES (Workspace) */
-        .sidebar { height: 100vh; width: 260px; position: fixed; background: var(--primary); color: white; padding-top: 20px; z-index: 1050; }
+        /* --- APP STYLES (Diadaptasi dari UI Anda) --- */
+        .sidebar { height: 100vh; width: 260px; position: fixed; top: 0; left: 0; background: var(--primary); color: white; padding-top: 20px; z-index: 1050; }
+        .nav-link { color: rgba(255, 255, 255, 0.7); padding: 12px 20px; margin: 4px 15px; border-radius: 8px; font-weight: 500; cursor: pointer; }
+        .nav-link:hover, .nav-link.active { color: var(--primary); background: var(--brand-color); }
         .main-content { margin-left: 260px; padding: 30px; min-height: 100vh; display: none; }
-        .nav-link { color: rgba(255,255,255,0.7); margin: 5px 15px; border-radius: 8px; cursor: pointer; font-weight: 500; }
-        .nav-link.active, .nav-link:hover { background: rgba(255,255,255,0.1); color: var(--brand-color); }
-        .stat-card { background: white; padding: 20px; border-radius: 12px; border-left: 5px solid var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .topbar { background: white; padding: 15px 30px; border-radius: 12px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+        .stat-card { background: white; border-radius: 12px; padding: 20px; border-left: 5px solid var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .stat-card.emerald { border-left-color: var(--accent); }
+        .stat-card.blue { border-left-color: var(--secondary); }
+        .app-view { display: none; animation: fadeIn 0.4s; }
+        .app-view.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        #loading-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.95); z-index: 9999; display: none; flex-direction:column; align-items:center; justify-content:center; }
+        /* KANBAN STYLES */
+        .kanban-board { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; min-height: 600px; }
+        .kanban-column { background: #e5e7eb; border-radius: 10px; min-width: 300px; width: 300px; display: flex; flex-direction: column; }
+        .kanban-header { padding: 15px; font-weight: 600; border-bottom: 2px solid #d1d5db; display: flex; justify-content: space-between; }
+        .kanban-body { padding: 10px; flex-grow: 1; min-height: 200px; }
+        .kanban-card { background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; cursor: grab; border-left: 4px solid var(--secondary); }
+        
+        #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 9999; display: none; flex-direction: column; justify-content: center; align-items: center; }
     </style>
 </head>
 <body>
 
-    <!-- LOADING OVERLAY -->
     <div id="loading-overlay">
         <div class="spinner-border" style="width: 3rem; height: 3rem; color: var(--brand-color);"></div>
-        <h6 class="mt-3 text-muted fw-bold font-monospace" id="loading-text">Authenticating...</h6>
+        <h5 class="mt-3 text-dark fw-bold" id="loading-text">Memuat Sistem...</h5>
     </div>
 
-    <!-- 1. LOGIN SCREEN -->
     <div id="login-screen">
         <div class="login-box text-center">
             <h2 class="brand-text"><i class="bi bi-layers-fill" style="color: var(--brand-color);"></i> klikCRM <span style="color: var(--brand-color);">Pro</span></h2>
             <p class="text-muted mb-4 small fw-medium">Enterprise Cloud Workspace</p>
-            
             <form onsubmit="handleLogin(event)">
                 <div class="mb-4 text-start">
-                    <label class="form-label fw-bold text-secondary" style="font-size: 0.75rem; letter-spacing: 0.5px;">ID LISENSI DATABASE</label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-key text-muted"></i></span>
-                        <input type="text" class="form-control form-control-lg bg-light border-start-0 fs-6" id="licenseKey" placeholder="Paste ID Spreadsheet Anda..." required>
-                    </div>
+                    <label class="form-label fw-bold text-secondary" style="font-size: 0.75rem;">ID LISENSI DATABASE</label>
+                    <input type="text" class="form-control form-control-lg bg-light fs-6" id="licenseKey" placeholder="Paste ID Spreadsheet Anda..." required>
                 </div>
-                <button type="submit" class="btn btn-login w-100 py-2.5 fs-6"><i class="bi bi-shield-lock me-2"></i> Akses Workspace</button>
+                <button type="submit" class="btn btn-login w-100 py-2.5 fs-6">Akses Workspace</button>
             </form>
-            
-            <div class="trust-badge">
-                <i class="bi bi-check-circle-fill text-success me-1"></i> Sistem Validasi Otomatis Aktif
-            </div>
-        </div>
-
-        <!-- FOOTER SUPPORT -->
-        <div class="login-footer">
-            <div>&copy; 2026 Develop by <strong class="text-white">klikSistem.com</strong></div>
-            <div><i class="bi bi-whatsapp"></i> Technical Support: <a href="https://wa.me/6281328307335" target="_blank">0813 2830 7335</a></div>
         </div>
     </div>
 
-    <!-- 2. MAIN APPLICATION -->
     <nav class="sidebar" id="sidebar" style="display: none;">
         <div class="text-center mb-4 fs-4 fw-bold" style="color: var(--brand-color);"><i class="bi bi-layers-fill"></i> klikCRM Pro</div>
-        <div class="nav flex-column">
-            <a class="nav-link active" onclick="switchView('dashboard')"><i class="bi bi-grid-1x2-fill me-2"></i> Dashboard</a>
-            <a class="nav-link" onclick="switchView('leads')"><i class="bi bi-people-fill me-2"></i> Master Leads</a>
-            <a class="nav-link text-danger mt-5" onclick="logout()"><i class="bi bi-box-arrow-left me-2"></i> Keluar (Logout)</a>
-        </div>
+        <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link active" onclick="switchView('dashboard')"><i class="bi bi-grid-1x2-fill me-2"></i> Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="switchView('leads')"><i class="bi bi-people-fill me-2"></i> Master Contact</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="switchView('pipeline')"><i class="bi bi-kanban me-2"></i> Sales Pipeline</a></li>
+            <li class="nav-item mt-5"><a class="nav-link text-white bg-danger" onclick="logout()"><i class="bi bi-box-arrow-left me-2"></i> Keluar</a></li>
+        </ul>
     </nav>
 
     <div class="main-content" id="main-content">
-        <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded-3 shadow-sm">
-            <h4 class="m-0 fw-bold" id="page-title">Dashboard Overview</h4>
-            <span class="badge bg-success" id="tenant-badge">Cloud Connected</span>
+        <div class="topbar">
+            <h4 class="mb-0 fw-bold text-truncate" id="page-title">Dashboard Overview</h4>
+            <span class="badge bg-success">Cloud Connected</span>
         </div>
 
-        <div id="dashboard" class="app-view">
-            <div class="row g-3 mb-4">
-                <div class="col-md-4">
-                    <div class="stat-card">
-                        <div class="text-muted small fw-bold">TOTAL LEADS</div>
-                        <h2 id="dash-leads" class="m-0 mt-2 fw-bold text-dark">0</h2>
+        <div id="dashboard" class="app-view active">
+            <div class="row g-4 mb-4">
+                <div class="col-md-3"><div class="stat-card"><div class="stat-title text-muted small fw-bold">TOTAL LEADS</div><div class="fs-2 fw-bold" id="dash-leads">0</div></div></div>
+                <div class="col-md-3"><div class="stat-card blue"><div class="stat-title text-muted small fw-bold">ACTIVE PROPOSALS</div><div class="fs-2 fw-bold" id="dash-proposals">0</div></div></div>
+                <div class="col-md-3"><div class="stat-card emerald"><div class="stat-title text-muted small fw-bold">WIN RATE</div><div class="fs-2 fw-bold" id="dash-winrate">0%</div></div></div>
+                <div class="col-md-3"><div class="stat-card emerald"><div class="stat-title text-muted small fw-bold">TOTAL REVENUE</div><div class="fs-2 fw-bold text-success" id="dash-revenue">Rp 0</div></div></div>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-8">
+                    <div class="card border-0 shadow-sm rounded-4 h-100 p-4">
+                        <h5 class="fw-bold mb-4">Sales Funnel Overview</h5>
+                        <div style="height: 320px;"><canvas id="funnelChart"></canvas></div>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="stat-card" style="border-left-color: #10b981;">
-                        <div class="text-muted small fw-bold">TOTAL POTENSI REVENUE</div>
-                        <h2 id="dash-revenue" class="m-0 mt-2 fw-bold text-success">Rp 0</h2>
+                    <div class="card border-0 shadow-sm rounded-4 h-100 p-4">
+                        <h5 class="fw-bold mb-4">Top Leads to Follow Up</h5>
+                        <div id="urgent-followup-list"></div>
                     </div>
                 </div>
             </div>
-            <div class="card border-0 shadow-sm rounded-3 p-4">
-                <h5 class="fw-bold mb-3">Sistem Berjalan Normal</h5>
-                <p class="text-muted">Gunakan menu Master Leads di sebelah kiri untuk mengelola data prospek klien Anda.</p>
-            </div>
         </div>
 
-        <div id="leads" class="app-view" style="display: none;">
-            <div class="card border-0 shadow-sm rounded-3 p-4">
-                <div class="d-flex justify-content-between align-items-center mb-4">
+        <div id="leads" class="app-view">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <div class="d-flex justify-content-between mb-4">
                     <h5 class="fw-bold m-0">Master Contact Database</h5>
-                    <button class="btn btn-dark btn-sm" style="background: var(--primary);"><i class="bi bi-plus-lg"></i> Tambah Lead</button>
+                    <button class="btn btn-dark" style="background: var(--primary);" onclick="openLeadModal()"><i class="bi bi-plus-lg"></i> Tambah Lead</button>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
-                        <thead class="table-light">
-                            <tr><th>Perusahaan</th><th>PIC</th><th>Status</th><th>Nilai</th></tr>
-                        </thead>
+                        <thead class="table-light"><tr><th>ID</th><th>Perusahaan</th><th>PIC</th><th>Status</th><th>Potensi</th><th>Aksi</th></tr></thead>
                         <tbody id="leads-table-body"></tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+
+        <div id="pipeline" class="app-view">
+            <p class="text-muted mb-4">Sentuh tahan lalu geser (Drag & Drop) card untuk mengubah status pipeline.</p>
+            <div class="kanban-board" id="kanban-board"></div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="leadModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white"><h5 class="modal-title text-warning">Form Data Lead</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body p-4">
+                    <form id="leadForm">
+                        <input type="hidden" id="leadId"><input type="hidden" id="followUpCount" value="0"><input type="hidden" id="lastFollowUp" value="-">
+                        <div class="row g-3">
+                            <div class="col-md-6"><label class="form-label fw-bold small">Nama Perusahaan</label><input type="text" class="form-control" id="company" required></div>
+                            <div class="col-md-6"><label class="form-label fw-bold small">Nama PIC</label><input type="text" class="form-control" id="pic" required></div>
+                            <div class="col-md-6"><label class="form-label fw-bold small">Nomor WA</label><input type="text" class="form-control" id="phone" required></div>
+                            <div class="col-md-6"><label class="form-label fw-bold small">Potensi Nilai (Rp)</label><input type="number" class="form-control" id="value" required></div>
+                            <div class="col-md-6"><label class="form-label fw-bold small">Status Lead</label>
+                                <select class="form-select" id="status">
+                                    <option value="Cold Lead">Cold Lead</option><option value="Warm Lead">Warm Lead</option>
+                                    <option value="Hot Lead">Hot Lead</option><option value="Proposal">Proposal</option>
+                                    <option value="Loyal">Loyal</option><option value="Lost">Lost</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-dark w-100" onclick="saveLead()">Simpan Lead</button></div>
             </div>
         </div>
     </div>
 
     <script>
         // =========================================================================
-        // PASTIKAN URL API GAS ANDA TETAP ADA DI SINI
+        // PENTING: MASUKKAN URL WEB APP DARI KLIKCRM_CORE_ENGINE ANDA DI SINI
         const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwfM94k2ydHK9BST3WNrCMAYGbraZxjUjt4yiHbeitNpd_oeLieaOC7j7bplLwQ1o3nbQ/exec"; 
         // =========================================================================
 
         let currentDbId = localStorage.getItem('klikcrm_license_key') || "";
         let db = { leads: [], pipeline: [], followup: [], projects: [] };
+        let leadModalInstance, funnelChartInstance;
+        const STAGES = ["Prospecting", "Need Analysis", "Presentation", "Proposal Sent", "Negotiation", "Won", "Lost"];
 
         window.onload = () => {
-            if (currentDbId) {
-                document.getElementById('licenseKey').value = currentDbId;
-                executeLogin(currentDbId);
-            }
+            leadModalInstance = new bootstrap.Modal(document.getElementById('leadModal'));
+            if (currentDbId) { document.getElementById('licenseKey').value = currentDbId; executeLogin(currentDbId); }
         };
 
+        // --- CORE API FETCHER ---
         async function apiCall(actionName, payloadData = null) {
-            if (typeof google === 'undefined' && GAS_API_URL === "MASUKKAN_URL_WEB_APP_GAS_ANDA_DISINI") {
-                // Mode Simulasi Canvas (Fallback jika API URL belum diisi)
-                return { leads: [{ company: "PT Simulasi", pic: "Budi", phone: "08123", status: "Hot Lead", value: 5000000 }] };
-            }
-
             try {
                 const response = await fetch(GAS_API_URL, {
                     method: 'POST',
@@ -228,7 +191,7 @@
                 });
                 const result = await response.json();
                 if (result.status === "error") throw new Error(result.message);
-                return result.data;
+                return typeof result.data === 'string' ? JSON.parse(result.data) : result.data;
             } catch (error) { throw error; }
         }
 
@@ -242,11 +205,8 @@
         async function executeLogin(id) {
             currentDbId = id;
             showLoading("Memverifikasi Lisensi...");
-            
             try {
-                let rawData = await apiCall("getAllData"); 
-                db = typeof rawData === 'string' ? JSON.parse(rawData) : rawData;
-                
+                db = await apiCall("getAllData"); 
                 localStorage.setItem('klikcrm_license_key', currentDbId);
                 document.getElementById('login-screen').style.opacity = '0';
                 setTimeout(() => {
@@ -256,44 +216,140 @@
                     renderUI();
                 }, 500);
             } catch (error) {
-                localStorage.removeItem('klikcrm_license_key');
-                currentDbId = "";
+                localStorage.removeItem('klikcrm_license_key'); currentDbId = "";
                 Swal.fire('Akses Ditolak', error.message, 'error');
             } finally { hideLoading(); }
         }
 
-        function logout() {
-            localStorage.removeItem('klikcrm_license_key');
-            location.reload(); 
-        }
+        function logout() { localStorage.removeItem('klikcrm_license_key'); location.reload(); }
 
         function switchView(viewId) {
-            document.querySelectorAll('.app-view').forEach(el => el.style.display = 'none');
-            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
-            document.getElementById(viewId).style.display = 'block';
+            document.querySelectorAll('.app-view').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.sidebar .nav-link').forEach(el => el.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
             event.currentTarget.classList.add('active');
-            
-            const titles = { 'dashboard': 'Dashboard Overview', 'leads': 'Master Contact Database' };
+            const titles = { 'dashboard': 'Dashboard Overview', 'leads': 'Master Contact Database', 'pipeline': 'Sales Pipeline' };
             document.getElementById('page-title').innerText = titles[viewId];
+            if(viewId === 'pipeline') renderKanbanBoard();
+        }
+
+        function formatRupiah(number) {
+            if(isNaN(number) || number === null || number === '') return "Rp 0";
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(number);
         }
 
         function renderUI() {
-            document.getElementById('dash-leads').innerText = db.leads.length;
-            let totalVal = db.leads.reduce((sum, item) => sum + Number(item.value || 0), 0);
-            document.getElementById('dash-revenue').innerText = "Rp " + totalVal.toLocaleString('id-ID');
+            renderDashboard();
+            renderLeadsTable();
+            renderKanbanBoard();
+        }
 
+        function renderDashboard() {
+            document.getElementById('dash-leads').innerText = db.leads.length;
+            document.getElementById('dash-proposals').innerText = db.pipeline.filter(p => p.stage === 'Proposal Sent' || p.stage === 'Negotiation').length;
+            const totalWon = db.pipeline.filter(p => p.stage === 'Won').length;
+            document.getElementById('dash-winrate').innerText = db.leads.length > 0 ? Math.round((totalWon / db.leads.length) * 100) + '%' : '0%';
+            document.getElementById('dash-revenue').innerText = formatRupiah(db.pipeline.reduce((sum, item) => sum + Number(item.value || 0), 0));
+
+            let activeLeads = db.leads.filter(l => l.status !== "Lost" && l.status !== "Loyal").slice(0, 3);
+            document.getElementById('urgent-followup-list').innerHTML = activeLeads.map(lead => `
+                <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                    <div><div class="fw-bold">${lead.company}</div><small class="text-muted">${lead.pic} | ${lead.status}</small></div>
+                </div>`).join('');
+
+            const ctx = document.getElementById('funnelChart').getContext('2d');
+            const stageCounts = STAGES.map(stage => db.pipeline.filter(p => p.stage === stage).length);
+            if(funnelChartInstance) funnelChartInstance.destroy();
+            funnelChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: { labels: STAGES, datasets: [{ data: stageCounts, backgroundColor: ['#94a3b8','#60a5fa','#3b82f6','#8b5cf6','#f59e0b','#10b981','#ef4444'], borderRadius: 6 }] },
+                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+        }
+
+        function renderLeadsTable() {
             const tbody = document.getElementById('leads-table-body');
             tbody.innerHTML = '';
             db.leads.forEach(lead => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td class="fw-bold">${lead.company}</td>
-                        <td>${lead.pic} <br><small class="text-muted">${lead.phone}</small></td>
-                        <td><span class="badge bg-secondary">${lead.status}</span></td>
-                        <td class="text-success fw-bold">Rp ${Number(lead.value).toLocaleString('id-ID')}</td>
-                    </tr>
-                `;
+                let badgeClass = lead.status === 'Hot Lead' ? 'bg-danger' : 'bg-secondary';
+                if(lead.status === 'Warm Lead') badgeClass = 'bg-warning text-dark';
+                if(lead.status === 'Proposal') badgeClass = 'bg-primary';
+                if(lead.status === 'Won') badgeClass = 'bg-success';
+                
+                tbody.innerHTML += `<tr>
+                    <td class="small text-muted">${lead.id}</td>
+                    <td class="fw-bold">${lead.company}</td>
+                    <td>${lead.pic}<br><small class="text-muted">${lead.phone}</small></td>
+                    <td><span class="badge ${badgeClass}">${lead.status}</span></td>
+                    <td class="fw-bold text-success">${formatRupiah(lead.value)}</td>
+                    <td><button class="btn btn-sm btn-light text-danger" onclick="deleteLead('${lead.id}')"><i class="bi bi-trash"></i></button></td>
+                </tr>`;
             });
+        }
+
+        function renderKanbanBoard() {
+            const board = document.getElementById('kanban-board');
+            board.innerHTML = '';
+            STAGES.forEach(stage => {
+                const stageItems = db.pipeline.filter(p => p.stage === stage);
+                const stageId = stage.replace(/\s+/g, '-');
+                board.innerHTML += `
+                    <div class="kanban-column">
+                        <div class="kanban-header"><span>${stage}</span><span class="badge bg-secondary rounded-pill">${stageItems.length}</span></div>
+                        <div class="kanban-body" id="kanban-${stageId}" data-stage="${stage}">
+                            ${stageItems.map(item => `<div class="kanban-card" data-id="${item.id}">
+                                <div class="fw-bold">${item.company}</div><div class="text-success small fw-bold">${formatRupiah(item.value)}</div>
+                            </div>`).join('')}
+                        </div>
+                    </div>`;
+            });
+
+            STAGES.forEach(stage => {
+                const stageId = stage.replace(/\s+/g, '-');
+                const columnEl = document.getElementById(`kanban-${stageId}`);
+                if (columnEl) {
+                    new Sortable(columnEl, {
+                        group: 'pipeline', animation: 150,
+                        onEnd: async function (evt) {
+                            const itemId = evt.item.getAttribute('data-id');
+                            const newStage = evt.to.getAttribute('data-stage');
+                            const oldStage = evt.from.getAttribute('data-stage');
+                            if (newStage !== oldStage) {
+                                let idx = db.pipeline.findIndex(p => p.id === itemId);
+                                if(idx > -1) { 
+                                    db.pipeline[idx].stage = newStage;
+                                    renderDashboard(); renderKanbanBoard();
+                                    // Save to Backend via API
+                                    try { await apiCall("savePipeline", db.pipeline[idx]); } 
+                                    catch(e) { console.error("Gagal update pipeline", e); }
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        function openLeadModal() { document.getElementById('leadForm').reset(); document.getElementById('leadId').value = ''; leadModalInstance.show(); }
+        
+        async function saveLead() {
+            const data = {
+                id: document.getElementById('leadId').value || `LD-${Math.floor(1000 + Math.random() * 9000)}`,
+                company: document.getElementById('company').value, pic: document.getElementById('pic').value,
+                phone: document.getElementById('phone').value, status: document.getElementById('status').value,
+                value: Number(document.getElementById('value').value), date: new Date().toISOString().split('T')[0]
+            };
+            showLoading("Menyimpan Data...");
+            try { db = await apiCall("saveLead", data); leadModalInstance.hide(); renderUI(); } 
+            catch (e) { Swal.fire('Error', e.message, 'error'); } finally { hideLoading(); }
+        }
+
+        async function deleteLead(id) {
+            if (confirm('Hapus Lead ini?')) { 
+                showLoading("Menghapus Data...");
+                try { db = await apiCall("deleteLead", id); renderUI(); } 
+                catch (e) { Swal.fire('Error', e.message, 'error'); } finally { hideLoading(); }
+            }
         }
 
         function showLoading(text) { document.getElementById('loading-text').innerText = text; document.getElementById('loading-overlay').style.display = 'flex'; }
