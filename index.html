@@ -3,54 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>klikCRM Pro - SaaS Cloud</title>
+    <title>klikCRM Pro - Enterprise Cloud</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        :root { --primary: #0a192f; --brand-color: #FFD700; --bg-color: #f3f4f6; }
-        body { background-color: var(--bg-color); font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
+        :root { 
+            --primary: #0a192f; 
+            --primary-light: #112240;
+            --brand-color: #FFB800; /* Kuning yang lebih tajam dan solid */
+            --bg-color: #f3f4f6; 
+        }
         
-        /* LOGIN SCREEN STYLES */
+        body { 
+            background-color: var(--bg-color); 
+            font-family: 'Segoe UI', system-ui, sans-serif; 
+            overflow-x: hidden; 
+        }
+        
+        /* LOGIN SCREEN STYLES DENGAN KESAN PREMIUM */
         #login-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--primary); display: flex; align-items: center; justify-content: center;
+            /* Latar belakang dengan gradien radial yang elegan */
+            background: radial-gradient(circle at top right, var(--primary-light), var(--primary));
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
             z-index: 2000; transition: opacity 0.5s;
         }
-        .login-box { background: white; padding: 40px; border-radius: 15px; width: 100%; max-width: 450px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+
+        .login-box { 
+            background: rgba(255, 255, 255, 0.98); 
+            padding: 45px 40px; 
+            border-radius: 20px; 
+            width: 100%; 
+            max-width: 420px; 
+            /* Shadow yang lebih dalam dengan sentuhan warna brand */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(255, 184, 0, 0.05); 
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .brand-text {
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 2rem;
+            letter-spacing: -0.5px;
+        }
+
+        .btn-login {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login:hover {
+            background: var(--brand-color);
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(255, 184, 0, 0.3);
+        }
+
+        .trust-badge {
+            display: inline-block;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            color: #6c757d;
+            font-weight: 500;
+            margin-top: 15px;
+        }
+
+        /* FOOTER STYLES */
+        .login-footer {
+            margin-top: 40px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+            line-height: 1.8;
+        }
+
+        .login-footer a {
+            color: var(--brand-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .login-footer a:hover {
+            color: white;
+        }
         
-        /* APP STYLES (Simplified for brevity, inheriting Bootstrap) */
+        /* APP STYLES (Workspace) */
         .sidebar { height: 100vh; width: 260px; position: fixed; background: var(--primary); color: white; padding-top: 20px; z-index: 1050; }
         .main-content { margin-left: 260px; padding: 30px; min-height: 100vh; display: none; }
-        .nav-link { color: rgba(255,255,255,0.7); margin: 5px 15px; border-radius: 8px; cursor: pointer; }
-        .nav-link.active, .nav-link:hover { background: rgba(255,255,255,0.1); color: white; }
-        .stat-card { background: white; padding: 20px; border-radius: 12px; border-left: 5px solid var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .nav-link { color: rgba(255,255,255,0.7); margin: 5px 15px; border-radius: 8px; cursor: pointer; font-weight: 500; }
+        .nav-link.active, .nav-link:hover { background: rgba(255,255,255,0.1); color: var(--brand-color); }
+        .stat-card { background: white; padding: 20px; border-radius: 12px; border-left: 5px solid var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         
-        #loading-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.9); z-index: 9999; display: none; flex-direction:column; align-items:center; justify-content:center; }
+        #loading-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.95); z-index: 9999; display: none; flex-direction:column; align-items:center; justify-content:center; }
     </style>
 </head>
 <body>
 
+    <!-- LOADING OVERLAY -->
     <div id="loading-overlay">
-        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
-        <h5 class="mt-3 text-muted" id="loading-text">Menghubungkan ke Server...</h5>
+        <div class="spinner-border" style="width: 3rem; height: 3rem; color: var(--brand-color);"></div>
+        <h6 class="mt-3 text-muted fw-bold font-monospace" id="loading-text">Authenticating...</h6>
     </div>
 
+    <!-- 1. LOGIN SCREEN -->
     <div id="login-screen">
         <div class="login-box text-center">
-            <h2 style="color: var(--primary); font-weight: 800;"><i class="bi bi-layers-fill text-warning"></i> klikCRM <span class="text-warning">Pro</span></h2>
-            <p class="text-muted mb-4">SaaS Cloud Workspace</p>
+            <h2 class="brand-text"><i class="bi bi-layers-fill" style="color: var(--brand-color);"></i> klikCRM <span style="color: var(--brand-color);">Pro</span></h2>
+            <p class="text-muted mb-4 small fw-medium">Enterprise Cloud Workspace</p>
+            
             <form onsubmit="handleLogin(event)">
-                <div class="mb-3 text-start">
-                    <label class="form-label fw-bold text-muted small">ID LISENSI (SPREADSHEET ID)</label>
-                    <input type="text" class="form-control form-control-lg bg-light" id="licenseKey" placeholder="Masukkan ID Database Anda..." required>
+                <div class="mb-4 text-start">
+                    <label class="form-label fw-bold text-secondary" style="font-size: 0.75rem; letter-spacing: 0.5px;">ID LISENSI DATABASE</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-key text-muted"></i></span>
+                        <input type="text" class="form-control form-control-lg bg-light border-start-0 fs-6" id="licenseKey" placeholder="Paste ID Spreadsheet Anda..." required>
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-dark w-100 py-2 fs-5" style="background: var(--primary);">Buka Workspace</button>
+                <button type="submit" class="btn btn-login w-100 py-2.5 fs-6"><i class="bi bi-shield-lock me-2"></i> Akses Workspace</button>
             </form>
-            <div class="mt-4 text-muted small">Sistem mendeteksi lisensi aktif Anda secara otomatis.</div>
+            
+            <div class="trust-badge">
+                <i class="bi bi-check-circle-fill text-success me-1"></i> Sistem Validasi Otomatis Aktif
+            </div>
+        </div>
+
+        <!-- FOOTER SUPPORT -->
+        <div class="login-footer">
+            <div>&copy; 2026 Develop by <strong class="text-white">klikSistem.com</strong></div>
+            <div><i class="bi bi-whatsapp"></i> Technical Support: <a href="https://wa.me/6281328307335" target="_blank">0813 2830 7335</a></div>
         </div>
     </div>
 
+    <!-- 2. MAIN APPLICATION -->
     <nav class="sidebar" id="sidebar" style="display: none;">
         <div class="text-center mb-4 fs-4 fw-bold" style="color: var(--brand-color);"><i class="bi bi-layers-fill"></i> klikCRM Pro</div>
         <div class="nav flex-column">
@@ -82,16 +175,16 @@
                 </div>
             </div>
             <div class="card border-0 shadow-sm rounded-3 p-4">
-                <h5 class="fw-bold mb-3">Database Preview</h5>
+                <h5 class="fw-bold mb-3">Sistem Berjalan Normal</h5>
                 <p class="text-muted">Gunakan menu Master Leads di sebelah kiri untuk mengelola data prospek klien Anda.</p>
             </div>
         </div>
 
         <div id="leads" class="app-view" style="display: none;">
             <div class="card border-0 shadow-sm rounded-3 p-4">
-                <div class="d-flex justify-content-between mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
                     <h5 class="fw-bold m-0">Master Contact Database</h5>
-                    <button class="btn btn-primary btn-sm" onclick="alert('Fitur input aktif. Silakan kembangkan form modalnya di sini!')">+ Tambah Lead</button>
+                    <button class="btn btn-dark btn-sm" style="background: var(--primary);"><i class="bi bi-plus-lg"></i> Tambah Lead</button>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
@@ -107,14 +200,13 @@
 
     <script>
         // =========================================================================
-        // PENTING: MASUKKAN URL WEB APP DARI KLIKCRM_CORE_ENGINE ANDA DI SINI
+        // PASTIKAN URL API GAS ANDA TETAP ADA DI SINI
         const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwfM94k2ydHK9BST3WNrCMAYGbraZxjUjt4yiHbeitNpd_oeLieaOC7j7bplLwQ1o3nbQ/exec"; 
         // =========================================================================
 
         let currentDbId = localStorage.getItem('klikcrm_license_key') || "";
         let db = { leads: [], pipeline: [], followup: [], projects: [] };
 
-        // Cek Auto-Login saat web dibuka
         window.onload = () => {
             if (currentDbId) {
                 document.getElementById('licenseKey').value = currentDbId;
@@ -122,28 +214,24 @@
             }
         };
 
-        // Fungsi Penjembatan API (Fetch ke GAS)
         async function apiCall(actionName, payloadData = null) {
+            if (typeof google === 'undefined' && GAS_API_URL === "MASUKKAN_URL_WEB_APP_GAS_ANDA_DISINI") {
+                // Mode Simulasi Canvas (Fallback jika API URL belum diisi)
+                return { leads: [{ company: "PT Simulasi", pic: "Budi", phone: "08123", status: "Hot Lead", value: 5000000 }] };
+            }
+
             try {
                 const response = await fetch(GAS_API_URL, {
                     method: 'POST',
-                    body: JSON.stringify({
-                        action: actionName,
-                        dbId: currentDbId,
-                        data: payloadData
-                    }),
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' } // Hindari error CORS
+                    body: JSON.stringify({ action: actionName, dbId: currentDbId, data: payloadData }),
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }
                 });
-                
                 const result = await response.json();
                 if (result.status === "error") throw new Error(result.message);
                 return result.data;
-            } catch (error) {
-                throw error; // Lempar ke fungsi pemanggil
-            }
+            } catch (error) { throw error; }
         }
 
-        // Proses Login & Validasi Lisensi
         async function handleLogin(e) {
             e.preventDefault();
             const inputId = document.getElementById('licenseKey').value.trim();
@@ -156,11 +244,9 @@
             showLoading("Memverifikasi Lisensi...");
             
             try {
-                // Tembak API untuk mendapatkan data (sekaligus cek blokir)
-                const rawData = await apiCall("getAllData"); 
-                db = JSON.parse(rawData); // Parse JSON string dari Apps Script
+                let rawData = await apiCall("getAllData"); 
+                db = typeof rawData === 'string' ? JSON.parse(rawData) : rawData;
                 
-                // Login Berhasil!
                 localStorage.setItem('klikcrm_license_key', currentDbId);
                 document.getElementById('login-screen').style.opacity = '0';
                 setTimeout(() => {
@@ -170,21 +256,17 @@
                     renderUI();
                 }, 500);
             } catch (error) {
-                // Login Gagal (ID Salah atau Diblokir)
                 localStorage.removeItem('klikcrm_license_key');
                 currentDbId = "";
                 Swal.fire('Akses Ditolak', error.message, 'error');
-            } finally {
-                hideLoading();
-            }
+            } finally { hideLoading(); }
         }
 
         function logout() {
             localStorage.removeItem('klikcrm_license_key');
-            location.reload(); // Refresh halaman agar kembali ke login
+            location.reload(); 
         }
 
-        // UI & Render Functions
         function switchView(viewId) {
             document.querySelectorAll('.app-view').forEach(el => el.style.display = 'none');
             document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
@@ -196,12 +278,10 @@
         }
 
         function renderUI() {
-            // Render Dashboard
             document.getElementById('dash-leads').innerText = db.leads.length;
             let totalVal = db.leads.reduce((sum, item) => sum + Number(item.value || 0), 0);
             document.getElementById('dash-revenue').innerText = "Rp " + totalVal.toLocaleString('id-ID');
 
-            // Render Table Leads
             const tbody = document.getElementById('leads-table-body');
             tbody.innerHTML = '';
             db.leads.forEach(lead => {
