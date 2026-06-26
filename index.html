@@ -4,103 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>klikCRM Pro - Enterprise Cloud</title>
-    <!-- CSS LIBRARIES -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        :root {
-            --primary: #0a192f;    
-            --brand-color: #FFB800; 
-            --secondary: #1e88e5;  
-            --accent: #10b981;     
-            --bg-color: #f3f4f6;
-            --text-dark: #1f2937;
-            --text-muted: #6b7280;
-        }
+        :root { --primary: #0a192f; --brand-color: #FFB800; --secondary: #1e88e5; --accent: #10b981; --bg-color: #f3f4f6; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: #1f2937; overflow-x: hidden; }
 
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-dark); overflow-x: hidden; }
-
-        /* --- LOGIN SCREEN PREMIUM --- */
-        #login-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at top right, #112240, var(--primary));
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 2000; transition: opacity 0.5s;
-        }
-        .login-box { 
-            background: rgba(255, 255, 255, 0.98); padding: 45px 40px; border-radius: 20px; 
-            width: 100%; max-width: 420px; box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(255, 184, 0, 0.05); text-align: center;
-        }
+        /* LOGIN SCREEN */
+        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at top right, #112240, var(--primary)); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2000; transition: opacity 0.5s; }
+        .login-box { background: rgba(255, 255, 255, 0.98); padding: 45px 40px; border-radius: 20px; width: 100%; max-width: 420px; box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(255, 184, 0, 0.05); text-align: center; }
         .brand-text { color: var(--primary); font-weight: 800; font-size: 2rem; letter-spacing: -0.5px; }
-        .btn-login { background: var(--primary); color: white; font-weight: 600; transition: all 0.3s ease; border: none; }
+        .btn-login { background: var(--primary); color: white; font-weight: 600; border: none; }
         .btn-login:hover { background: var(--brand-color); color: var(--primary); transform: translateY(-2px); }
         .trust-badge { display: inline-block; background: #f8f9fa; border: 1px solid #e9ecef; padding: 8px 15px; border-radius: 50px; font-size: 0.75rem; color: #6c757d; font-weight: 500; margin-top: 20px; }
-        .login-footer { margin-top: 40px; text-align: center; color: rgba(255, 255, 255, 0.6); font-size: 0.85rem; line-height: 1.8; }
-        .login-footer a { color: var(--brand-color); text-decoration: none; font-weight: 600; }
 
-        /* --- UI WORKSPACE MASTER --- */
-        .sidebar { height: 100vh; width: 260px; position: fixed; top: 0; left: 0; background: var(--primary); color: white; padding-top: 20px; transition: transform 0.3s ease-in-out; z-index: 1050; }
-        .sidebar-brand { font-size: 1.35rem; font-weight: 700; text-align: center; margin-bottom: 30px; letter-spacing: 1px; color: var(--brand-color); }
-        .nav-link { color: rgba(255, 255, 255, 0.7); padding: 12px 20px; margin: 4px 15px; border-radius: 8px; transition: all 0.3s; font-weight: 500; cursor: pointer; }
-        .nav-link:hover, .nav-link.active { color: var(--primary); background: var(--brand-color); }
+        /* UI WORKSPACE */
+        .sidebar { height: 100vh; width: 260px; position: fixed; top: 0; left: 0; background: var(--primary); color: white; padding-top: 20px; z-index: 1050; }
+        .sidebar-brand { font-size: 1.35rem; font-weight: 700; text-align: center; margin-bottom: 30px; color: var(--brand-color); }
+        .nav-link { color: rgba(255, 255, 255, 0.7); padding: 12px 20px; margin: 4px 15px; border-radius: 8px; cursor: pointer; }
+        .nav-link:hover, .nav-link.active { color: var(--primary); background: var(--brand-color); font-weight: 600; }
         .nav-link i { margin-right: 10px; font-size: 1.1rem; }
-        
-        .main-content { margin-left: 260px; padding: 30px; transition: all 0.3s; min-height: 100vh; }
-        .topbar { background: white; padding: 15px 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+        .badge-notif { position: absolute; right: 20px; background: #ef4444; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.7rem; }
 
-        .stat-card { background: white; border-radius: 12px; padding: 20px; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-left: 5px solid var(--primary); transition: transform 0.2s; }
-        .stat-card:hover { transform: translateY(-5px); }
+        .main-content { margin-left: 260px; padding: 30px; min-height: 100vh; }
+        .topbar { background: white; padding: 15px 30px; border-radius: 12px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+
+        .stat-card { background: white; border-radius: 12px; padding: 20px; border-left: 5px solid var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         .stat-card.emerald { border-left-color: var(--accent); }
-        .stat-card.blue { border-left-color: var(--secondary); }
-        .stat-title { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
-        .stat-value { font-size: 1.8rem; font-weight: 700; margin-top: 10px; color: var(--text-dark); }
-
+        .stat-card.red { border-left-color: #ef4444; }
+        
         .app-view { display: none; animation: fadeIn 0.4s; }
         .app-view.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .kanban-board { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; min-height: 600px; }
+        .kanban-board { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; min-height: 500px; }
         .kanban-column { background: #e5e7eb; border-radius: 10px; min-width: 300px; width: 300px; display: flex; flex-direction: column; }
         .kanban-header { padding: 15px; font-weight: 600; border-bottom: 2px solid #d1d5db; display: flex; justify-content: space-between; }
         .kanban-body { padding: 10px; flex-grow: 1; min-height: 200px; }
-        .kanban-card { background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); cursor: grab; border-left: 4px solid var(--secondary); }
-        
+        .kanban-card { background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; cursor: grab; border-left: 4px solid var(--secondary); }
+
         #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; display: none; flex-direction: column; justify-content: center; align-items: center; }
-        .progress-indicator { height: 8px; border-radius: 4px; background: #e5e7eb; margin-top: 5px; }
-        .progress-bar-custom { height: 100%; border-radius: 4px; transition: width 0.3s; }
 
         .bottom-nav { display: none; }
-
         @media (max-width: 768px) {
             .sidebar { display: none !important; }
             .main-content { margin-left: 0; padding: 15px; padding-bottom: 85px; } 
-            .topbar { padding: 15px; margin-bottom: 20px; border-radius: 12px; }
-            .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; right: 0; background: white; box-shadow: 0 -4px 20px rgba(0,0,0,0.08); z-index: 1040; justify-content: space-around; align-items: center; padding: 12px 5px; padding-bottom: calc(12px + env(safe-area-inset-bottom)); border-top-left-radius: 20px; border-top-right-radius: 20px; }
-            .bottom-nav-link { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #94a3b8; font-size: 0.65rem; font-weight: 600; cursor: pointer; width: 20%; }
-            .bottom-nav-link i { font-size: 1.4rem; margin-bottom: 4px; }
+            .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; right: 0; background: white; box-shadow: 0 -4px 20px rgba(0,0,0,0.08); z-index: 1040; justify-content: space-around; align-items: center; padding: 12px 5px; }
+            .bottom-nav-link { display: flex; flex-direction: column; align-items: center; color: #94a3b8; font-size: 0.65rem; font-weight: 600; width: 20%; cursor: pointer; }
             .bottom-nav-link.active { color: var(--secondary); }
         }
     </style>
 </head>
 <body>
 
-    <!-- LOADING OVERLAY -->
     <div id="loading-overlay">
-        <div class="spinner-border" style="width: 3rem; height: 3rem; color: var(--brand-color);"></div>
-        <h6 class="mt-3 text-dark fw-bold font-monospace" id="loading-text">Authenticating...</h6>
+        <div class="spinner-border text-warning" style="width: 3rem; height: 3rem;"></div>
+        <h6 class="mt-3 fw-bold text-dark" id="loading-text">Memuat Workspace...</h6>
     </div>
 
-    <!-- 1. LOGIN SCREEN SAAS (PREMIUM) -->
     <div id="login-screen">
         <div class="login-box">
-            <h2 class="brand-text"><i class="bi bi-layers-fill" style="color: var(--brand-color);"></i> klikCRM <span style="color: var(--brand-color);">Pro</span></h2>
+            <h2 class="brand-text"><i class="bi bi-layers-fill text-warning"></i> klikCRM <span class="text-warning">Pro</span></h2>
             <p class="text-muted mb-4 small fw-medium">Enterprise Cloud Workspace</p>
-            
             <div>
                 <div class="mb-4 text-start">
-                    <label class="form-label fw-bold text-secondary" style="font-size: 0.75rem; letter-spacing: 0.5px;">ID LISENSI DATABASE</label>
+                    <label class="form-label fw-bold text-secondary" style="font-size: 0.75rem;">ID LISENSI DATABASE</label>
                     <div class="input-group">
                         <span class="input-group-text bg-light border-end-0"><i class="bi bi-key text-muted"></i></span>
                         <input type="text" class="form-control form-control-lg bg-light border-start-0 fs-6" id="licenseKey" placeholder="Paste ID Spreadsheet Anda...">
@@ -108,177 +78,120 @@
                 </div>
                 <button type="button" class="btn btn-login w-100 py-2.5 fs-6" onclick="manualLogin()"><i class="bi bi-shield-lock me-2"></i> Akses Workspace</button>
             </div>
-            
             <div class="trust-badge"><i class="bi bi-check-circle-fill text-success me-1"></i> Sistem Validasi Otomatis Aktif</div>
-        </div>
-        <div class="login-footer">
-            <div>&copy; 2026 Develop by <strong class="text-white">klikSistem.com</strong></div>
-            <div><i class="bi bi-whatsapp"></i> Technical Support: <a href="https://wa.me/6281328307335" target="_blank">0813 2830 7335</a></div>
         </div>
     </div>
 
-    <!-- 2. WRAPPER APLIKASI UTAMA -->
     <div id="app-wrapper" style="display: none;">
         
-        <!-- SIDEBAR -->
-        <nav class="sidebar" id="sidebar">
+        <nav class="sidebar">
             <div class="sidebar-brand"><i class="bi bi-layers-fill"></i> klikCRM Pro</div>
             <ul class="nav flex-column">
                 <li class="nav-item"><a class="nav-link active" onclick="switchView('dashboard')"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
                 <li class="nav-item"><a class="nav-link" onclick="switchView('leads')"><i class="bi bi-people-fill"></i> Master Contact</a></li>
-                <li class="nav-item"><a class="nav-link" onclick="switchView('followup')"><i class="bi bi-telephone-outbound-fill"></i> Follow Up Action</a></li>
+                <li class="nav-item"><a class="nav-link position-relative" onclick="switchView('followup')"><i class="bi bi-telephone-outbound-fill"></i> Follow Up <span id="notif-badge" class="badge-notif d-none">0</span></a></li>
                 <li class="nav-item"><a class="nav-link" onclick="switchView('pipeline')"><i class="bi bi-kanban"></i> Sales Pipeline</a></li>
-                <li class="nav-item"><a class="nav-link" onclick="switchView('projects')"><i class="bi bi-briefcase-fill"></i> Project Management</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="switchView('projects')"><i class="bi bi-briefcase-fill"></i> Projects</a></li>
+                <li class="nav-item mt-4"><a class="nav-link text-danger" onclick="switchView('deadlist')"><i class="bi bi-skull-fill"></i> Dead List</a></li>
             </ul>
-            <div class="position-absolute bottom-0 w-100 p-3">
-                <button class="btn btn-danger w-100 mb-3" onclick="logout()"><i class="bi bi-box-arrow-left"></i> Logout</button>
-            </div>
+            <div class="position-absolute bottom-0 w-100 p-3"><button class="btn btn-danger w-100" onclick="logout()">Logout</button></div>
         </nav>
 
-        <!-- BOTTOM NAVIGATION -->
         <nav class="bottom-nav">
             <div class="bottom-nav-link active" onclick="switchView('dashboard')"><i class="bi bi-grid-1x2-fill"></i><span>Utama</span></div>
             <div class="bottom-nav-link" onclick="switchView('leads')"><i class="bi bi-people-fill"></i><span>Kontak</span></div>
             <div class="bottom-nav-link" onclick="switchView('followup')"><i class="bi bi-telephone-outbound-fill"></i><span>Aktivitas</span></div>
             <div class="bottom-nav-link" onclick="switchView('pipeline')"><i class="bi bi-kanban"></i><span>Pipeline</span></div>
-            <div class="bottom-nav-link" onclick="switchView('projects')"><i class="bi bi-briefcase-fill"></i><span>Project</span></div>
+            <div class="bottom-nav-link" onclick="switchView('deadlist')"><i class="bi bi-skull text-danger"></i><span class="text-danger">Dead List</span></div>
         </nav>
 
-        <!-- MAIN CONTENT -->
         <div class="main-content">
             <div class="topbar">
-                <h4 class="mb-0 fw-bold text-truncate" id="page-title">Dashboard Overview</h4>
-                <div>
-                    <span class="badge bg-success d-none d-md-inline-block me-2" id="badgeMode">Cloud Connected</span>
-                    <button class="btn btn-outline-danger btn-sm d-inline-block d-md-none" onclick="logout()"><i class="bi bi-box-arrow-right"></i></button>
-                </div>
+                <h4 class="mb-0 fw-bold" id="page-title">Dashboard Overview</h4>
+                <span class="badge bg-success" id="env-badge">Cloud Connected</span>
             </div>
 
-            <!-- DASHBOARD -->
             <div id="dashboard" class="app-view active">
                 <div class="row g-4 mb-4">
-                    <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-title">Total Leads</div><div class="stat-value" id="dash-leads">0</div></div></div>
-                    <div class="col-6 col-md-3"><div class="stat-card blue"><div class="stat-title">Active Proposals</div><div class="stat-value" id="dash-proposals">0</div></div></div>
-                    <div class="col-6 col-md-3"><div class="stat-card emerald"><div class="stat-title">Win Rate</div><div class="stat-value" id="dash-winrate">0%</div></div></div>
-                    <div class="col-12 col-md-3"><div class="stat-card emerald"><div class="stat-title">Total Revenue (Pipeline)</div><div class="stat-value text-success" id="dash-revenue">Rp 0</div></div></div>
+                    <div class="col-6 col-md-3"><div class="stat-card"><div class="text-muted small fw-bold">TOTAL LEADS</div><div class="fs-3 fw-bold" id="dash-leads">0</div></div></div>
+                    <div class="col-6 col-md-3"><div class="stat-card emerald"><div class="text-muted small fw-bold">WIN RATE</div><div class="fs-3 fw-bold text-success" id="dash-winrate">0%</div></div></div>
+                    <div class="col-6 col-md-3"><div class="stat-card blue"><div class="text-muted small fw-bold">PIPELINE VALUE</div><div class="fs-4 fw-bold text-primary" id="dash-revenue">Rp 0</div></div></div>
+                    <div class="col-6 col-md-3"><div class="stat-card red"><div class="text-muted small fw-bold">DEAD LEADS</div><div class="fs-3 fw-bold text-danger" id="dash-dead">0</div></div></div>
                 </div>
-                <div class="row g-4">
-                    <div class="col-md-8"><div class="card border-0 shadow-sm rounded-4 h-100"><div class="card-body p-3 p-md-4"><h5 class="card-title fw-bold mb-4">Sales Funnel Overview</h5><div style="position: relative; height: 320px; width: 100%;"><canvas id="funnelChart"></canvas></div></div></div></div>
-                    <div class="col-md-4"><div class="card border-0 shadow-sm rounded-4 h-100"><div class="card-body p-3 p-md-4"><h5 class="card-title fw-bold mb-4">Top Leads to Follow Up</h5><div id="urgent-followup-list"></div></div></div></div>
+                <div class="card border-0 shadow-sm rounded-4 mb-4 p-4 bg-light border-start border-4 border-warning d-none" id="reminder-box">
+                    <h6 class="fw-bold text-warning"><i class="bi bi-bell-fill"></i> Pengingat Jadwal Follow Up!</h6>
+                    <p class="mb-0 small text-muted">Ada <strong id="reminder-count">0</strong> prospek yang jadwal Follow Up-nya jatuh tempo hari ini. Cek menu Follow Up.</p>
                 </div>
+                <div class="card border-0 shadow-sm rounded-4 p-4"><h5 class="fw-bold mb-4">Sales Funnel</h5><div style="height: 300px;"><canvas id="funnelChart"></canvas></div></div>
             </div>
 
-            <!-- LEADS -->
             <div id="leads" class="app-view">
-                <div class="card border-0 shadow-sm rounded-4">
-                    <div class="card-body p-3 p-md-4">
-                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
-                            <h5 class="card-title fw-bold mb-0">Master Contact Database</h5>
-                            <div>
-                                <button class="btn btn-primary w-100 w-md-auto mb-2 mb-md-0" style="background: var(--primary); border-color: var(--primary);" onclick="openLeadModal()"><i class="bi bi-plus-lg"></i> Tambah Lead Baru</button>
-                                <button class="btn btn-outline-success w-100 w-md-auto ms-md-2" onclick="exportToCSV()"><i class="bi bi-file-earmark-excel"></i> Export CSV</button>
-                            </div>
+                <div class="card border-0 shadow-sm rounded-4 p-4">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+                        <h5 class="fw-bold mb-0">Master Contact Database</h5>
+                        <div class="d-flex gap-2">
+                            <input type="file" id="importCsv" accept=".csv" style="display:none;" onchange="importCSVData(event)">
+                            <button class="btn btn-outline-secondary btn-sm" onclick="document.getElementById('importCsv').click()"><i class="bi bi-upload"></i> Import</button>
+                            <button class="btn btn-outline-success btn-sm" onclick="exportToCSV()"><i class="bi bi-file-earmark-excel"></i> Export</button>
+                            <button class="btn btn-primary btn-sm" style="background: var(--primary);" onclick="openLeadModal()"><i class="bi bi-plus-lg"></i> Lead Baru</button>
                         </div>
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle">
-                                <thead class="table-light"><tr><th>ID Lead</th><th>Perusahaan</th><th>PIC</th><th>Status</th><th>Potensi Project</th><th>Aksi</th></tr></thead>
-                                <tbody id="leads-table-body"></tbody>
-                            </table>
-                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light"><tr><th>ID & Perusahaan</th><th>PIC & Kontak</th><th>Status</th><th>Produk Diminati</th><th>Aksi</th></tr></thead>
+                            <tbody id="leads-table-body"></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
 
-            <!-- FOLLOW UP -->
             <div id="followup" class="app-view">
-                <div class="card border-0 shadow-sm rounded-4 mb-4">
-                    <div class="card-body p-3 p-md-4">
-                        <div class="row g-3 align-items-center">
-                            <div class="col-12 col-md-3"><h5 class="card-title fw-bold mb-0"><i class="bi bi-funnel"></i> Filter Data</h5></div>
-                            <div class="col-6 col-md-4"><select class="form-select" id="filterProduct" onchange="renderFollowUpTable()"><option value="ALL">Semua Produk</option></select></div>
-                            <div class="col-6 col-md-4"><select class="form-select" id="filterStatus" onchange="renderFollowUpTable()"><option value="ALL">Semua Status</option><option value="Cold Lead">Cold Lead</option><option value="Warm Lead">Warm Lead</option><option value="Hot Lead">Hot Lead</option><option value="Loyal">Loyal Client</option></select></div>
-                        </div>
+                <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                    <h5 class="fw-bold mb-3"><i class="bi bi-funnel"></i> Filter Data</h5>
+                    <div class="row g-3">
+                        <div class="col-md-4"><select class="form-select" id="filterProduct" onchange="renderUI()"><option value="ALL">Semua Produk</option></select></div>
+                        <div class="col-md-4"><select class="form-select" id="filterStatus" onchange="renderUI()"><option value="ALL">Semua Status (Kecuali Lost)</option><option value="Cold Lead">Cold Lead</option><option value="Warm Lead">Warm Lead</option><option value="Hot Lead">Hot Lead</option><option value="TODAY">Jadwal Hari Ini</option></select></div>
                     </div>
                 </div>
-                <div class="card border-0 shadow-sm rounded-4">
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0">
-                                <thead class="table-light"><tr><th class="ps-4">Perusahaan</th><th>Produk & Status</th><th>Progress Follow Up</th><th>Kontak Terakhir</th><th class="pe-4 text-end">Aksi</th></tr></thead>
-                                <tbody id="followup-table-body"></tbody>
-                            </table>
-                        </div>
+                <div class="card border-0 shadow-sm rounded-4 p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light"><tr><th class="ps-4">Perusahaan</th><th>Status & Progress</th><th>Jadwal Berikutnya</th><th class="pe-4 text-end">Aksi Cepat</th></tr></thead>
+                            <tbody id="followup-table-body"></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
 
-            <!-- PIPELINE -->
-            <div id="pipeline" class="app-view">
-                <div class="d-flex justify-content-between align-items-center mb-4"><p class="text-muted mb-0">Sentuh tahan lalu geser (Drag & Drop) card untuk mengubah status pipeline.</p></div>
-                <div class="kanban-board" id="kanban-board"></div>
-            </div>
+            <div id="pipeline" class="app-view"><div class="kanban-board" id="kanban-board"></div></div>
             
-            <!-- PROJECTS -->
-            <div id="projects" class="app-view">
-                <div class="card border-0 shadow-sm rounded-4">
-                    <div class="card-body p-3 p-md-4">
-                        <div class="d-flex justify-content-between align-items-center mb-4"><h5 class="card-title fw-bold mb-0">Project Management</h5><span class="badge bg-success rounded-pill" id="total-projects">0 Project Aktif</span></div>
-                        <p class="text-muted small mb-4">Daftar ini dihasilkan otomatis dari klien yang masuk ke stage <strong>Won</strong> di Pipeline.</p>
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle">
-                                <thead class="table-light"><tr><th>ID Lead</th><th>Perusahaan & Produk</th><th>Nilai Project</th><th>Status</th><th>Progress</th><th>Aksi</th></tr></thead>
-                                <tbody id="projects-table-body"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> 
+            <div id="projects" class="app-view"><div class="card border-0 shadow-sm rounded-4 p-4"><h5 class="fw-bold mb-4">Project Management (Won Deals)</h5><div class="table-responsive"><table class="table align-middle"><thead class="table-light"><tr><th>ID Project</th><th>Perusahaan</th><th>Status Project</th></tr></thead><tbody id="projects-table-body"></tbody></table></div></div></div>
 
-    <!-- MODALS -->
-    <div class="modal fade" id="leadModal" tabindex="-1">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
-                <div class="modal-header text-white" style="background: var(--primary);"><h5 class="modal-title" style="color: var(--brand-color);"><i class="bi bi-person-plus-fill me-2"></i> Form Data Lead</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
-                <div class="modal-body p-4">
-                    <form id="leadForm">
-                        <input type="hidden" id="leadId"><input type="hidden" id="followUpCount" value="0"><input type="hidden" id="lastFollowUp" value="-">
-                        <div class="row g-3">
-                            <div class="col-md-6"><label class="form-label">Nama Perusahaan</label><input type="text" class="form-control" id="company" required></div>
-                            <div class="col-md-6"><label class="form-label">Nama PIC</label><input type="text" class="form-control" id="pic" required></div>
-                            <div class="col-md-6"><label class="form-label">Nomor WA / HP</label><input type="text" class="form-control" id="phone" required></div>
-                            <div class="col-md-6"><label class="form-label">Produk Diminati</label><input type="text" class="form-control" id="product" placeholder="Ketik nama produk..." required></div>
-                            <div class="col-md-6"><label class="form-label">Status Lead</label><select class="form-select" id="status"><option value="Cold Lead">Cold Lead</option><option value="Warm Lead">Warm Lead</option><option value="Hot Lead">Hot Lead</option><option value="Proposal">Proposal</option><option value="Loyal">Loyal</option><option value="Lost">Lost</option></select></div>
-                            <div class="col-md-6"><label class="form-label">Potensi Nilai Project (Rp)</label><input type="number" class="form-control" id="value" required></div>
-                            <div class="col-md-6"><label class="form-label">Sumber Lead</label><select class="form-select" id="source"><option value="Website">Website</option><option value="Referral">Referral</option><option value="Gereja">Gereja</option><option value="Ads">Ads</option><option value="Event">Event</option></select></div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer bg-light"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button><button type="button" class="btn btn-primary" style="background: var(--primary); border:none;" onclick="saveLead()">Simpan Lead</button></div>
+            <div id="deadlist" class="app-view">
+                <div class="alert alert-danger rounded-4"><i class="bi bi-info-circle-fill"></i> <strong>Arsip Dead List:</strong> Daftar prospek dengan status LOST atau sudah difollow up 5x tanpa hasil.</div>
+                <div class="card border-0 shadow-sm rounded-4 p-4"><table class="table align-middle"><thead class="table-light"><tr><th>Perusahaan & Kontak</th><th>Produk Diminati</th><th>Total Follow Up</th><th>Aksi</th></tr></thead><tbody id="dead-table-body"></tbody></table></div>
             </div>
         </div>
+    </div>
+
+    <div class="modal fade" id="leadModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content border-0"><div class="modal-header bg-dark text-white"><h5 class="modal-title text-warning">Form Lead</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body p-4"><form id="leadForm"><input type="hidden" id="leadId"><input type="hidden" id="followUpCount" value="0"><input type="hidden" id="lastFollowUp" value="-"><input type="hidden" id="nextFollowUp" value="-">
+                <div class="row g-3"><div class="col-md-6"><label>Perusahaan</label><input type="text" class="form-control" id="company" required></div><div class="col-md-6"><label>PIC</label><input type="text" class="form-control" id="pic" required></div><div class="col-md-6"><label>No WA</label><input type="text" class="form-control" id="phone" required></div><div class="col-md-6"><label>Produk</label><input type="text" class="form-control" id="product" required></div><div class="col-md-6"><label>Potensi (Rp)</label><input type="number" class="form-control" id="value" required></div><div class="col-md-6"><label>Sumber</label><select class="form-select" id="source"><option>Website</option><option>Referral</option><option>Ads</option></select></div><input type="hidden" id="status" value="Cold Lead"></div>
+            </form></div><div class="modal-footer"><button type="button" class="btn btn-dark w-100" onclick="saveLead()">Simpan Database</button></div>
+        </div></div>
     </div>
 
     <div class="modal fade" id="logModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
-                <div class="modal-header text-white" style="background: var(--secondary);"><h5 class="modal-title"><i class="bi bi-headset me-2"></i> Log Aktivitas</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
-                <div class="modal-body p-4">
-                    <form id="logForm">
-                        <input type="hidden" id="logLeadId">
-                        <div class="mb-3"><label class="form-label text-muted small mb-0">Follow Up Untuk:</label><h5 id="logCompanyName" class="fw-bold text-dark"></h5></div>
-                        <div class="mb-3"><label class="form-label">Media Komunikasi</label><select class="form-select" id="logMedia"><option value="WhatsApp">WhatsApp</option><option value="Telepon">Telepon</option><option value="Meeting">Meeting (Zoom/Offline)</option><option value="Email">Email</option></select></div>
-                        <div class="mb-3"><label class="form-label">Catatan Hasil / Respon</label><textarea class="form-control" id="logNotes" rows="3"></textarea></div>
-                        <div class="mb-3"><label class="form-label">Update Status (Opsional)</label><select class="form-select" id="logNewStatus"><option value="Cold Lead">Cold Lead</option><option value="Warm Lead">Naik ke Warm Lead</option><option value="Hot Lead">Naik ke Hot Lead</option><option value="Proposal">Proposal</option><option value="Lost">Lost (Arsipkan)</option></select></div>
-                    </form>
-                </div>
-                <div class="modal-footer bg-light"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button><button type="button" class="btn btn-primary" onclick="saveLogFollowUp()">Simpan Catatan</button></div>
-            </div>
-        </div>
+        <div class="modal-dialog modal-dialog-centered"><div class="modal-content border-0"><div class="modal-header bg-primary text-white"><h5 class="modal-title">Log Aktivitas</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body p-4"><form id="logForm"><input type="hidden" id="logLeadId">
+                <div class="mb-3"><label class="text-muted small">Update Status</label><select class="form-select" id="logNewStatus"><option value="Cold Lead">Tetap Cold Lead</option><option value="Warm Lead">Naik ke Warm Lead</option><option value="Hot Lead">Naik ke Hot Lead</option><option value="Proposal">Proposal / Nego</option><option value="Lost">Lost (Menyerah)</option></select></div>
+                <div class="mb-3"><label>Catatan</label><textarea class="form-control" id="logNotes" rows="2" required></textarea></div>
+                <div class="mb-3"><label class="text-primary fw-bold">Jadwal Berikutnya</label><input type="date" class="form-control border-primary" id="logNextFollowUp"></div>
+            </form></div><div class="modal-footer"><button type="button" class="btn btn-primary w-100" onclick="saveLogFollowUp()">Simpan Aktivitas</button></div>
+        </div></div>
     </div>
 
-    <!-- JS EXTERNAL -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -286,354 +199,204 @@
 
     <script>
         // =========================================================================
-        window.addEventListener('unhandledrejection', function(event) {
-            alert("Terjadi Kendala Koneksi: " + event.reason.message);
-        });
-
-        // PENTING: MASUKKAN URL WEB APP DARI KLIKCRM_CORE_ENGINE ANDA DI SINI
-        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwfM94k2ydHK9BST3WNrCMAYGbraZxjUjt4yiHbeitNpd_oeLieaOC7j7bplLwQ1o3nbQ/exec"; 
+        // PENTING: MASUKKAN URL WEB APP DARI klikCRM_Core_Engine ANDA DI SINI!
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw6y123Ydx07cmt0hQIRJqVl-Zmtu_lcgL0vj9UwWDqzPuUYJrHxaBC7I1X9Zr900A5Iw/exec"; 
         // =========================================================================
+
+        window.addEventListener('unhandledrejection', function(event) { alert("Sistem Error: " + event.reason.message); });
 
         let currentDbId = "";
         try { currentDbId = localStorage.getItem('klikcrm_license_key') || ""; } catch(e) {}
-
         let db = { leads: [], pipeline: [], followup: [], projects: [] };
         let isSimulation = false;
         let leadModalInstance, logModalInstance, funnelChartInstance;
         const STAGES = ["Prospecting", "Need Analysis", "Presentation", "Proposal Sent", "Negotiation", "Won", "Lost"];
 
         document.addEventListener("DOMContentLoaded", () => {
-            try {
-                if (typeof bootstrap !== 'undefined') {
-                    leadModalInstance = new bootstrap.Modal(document.getElementById('leadModal'));
-                    logModalInstance = new bootstrap.Modal(document.getElementById('logModal'));
-                }
-            } catch(e) {}
-
-            if (currentDbId) { 
-                document.getElementById('licenseKey').value = currentDbId; 
-                executeLogin(currentDbId); 
-            }
+            try { leadModalInstance = new bootstrap.Modal(document.getElementById('leadModal')); logModalInstance = new bootstrap.Modal(document.getElementById('logModal')); } catch(e) {}
+            if (currentDbId) { document.getElementById('licenseKey').value = currentDbId; executeLogin(currentDbId); }
         });
 
-        async function manualLogin() {
-            const inputId = document.getElementById('licenseKey').value.trim();
-            if (!inputId) {
-                alert("Mohon masukkan ID Database terlebih dahulu!");
-                return;
-            }
-            await executeLogin(inputId);
-        }
-
+        // --- FETCH VERCEL TO GAS API ---
         async function apiCall(actionName, payloadData = null) {
             if (GAS_API_URL === "" || GAS_API_URL.includes("MASUKKAN_URL")) {
                 isSimulation = true;
                 return new Promise(resolve => {
                     setTimeout(() => {
+                        let today = new Date().toISOString().split('T')[0];
                         if (actionName === "getAllData") {
                             resolve({
-                                leads: [{ id: "LD-1", company: "PT Simulasi (Dummy)", pic: "Budi", phone: "0812", status: "Hot Lead", value: 15000000, product: "Sistem ERP", followUpCount: 2, lastFollowUp: "2026-06-14" }],
-                                pipeline: [{ id: "LD-1", company: "PT Simulasi (Dummy)", value: 15000000, stage: "Negotiation" }],
-                                followup: [], projects: []
+                                leads: [{ id: "LD-001", company: "PT Simulasi", pic: "Budi", phone: "0812", status: "Warm Lead", product: "ERP", value: 25000000, followUpCount: 2, nextFollowUp: today }],
+                                pipeline: [{ id: "LD-001", company: "PT Simulasi", value: 25000000, stage: "Need Analysis" }], followup: [], projects: []
                             });
-                        } else if (actionName === "saveLead") {
-                            db.leads.push(payloadData); resolve(db);
-                        } else { resolve(db); } 
+                        } else if (actionName === "saveLead") { db.leads.push(payloadData); resolve(db); } else { resolve(db); } 
                     }, 500);
                 });
             }
 
-            const response = await fetch(GAS_API_URL, {
-                method: 'POST', body: JSON.stringify({ action: actionName, dbId: currentDbId, data: payloadData }), headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-            });
+            const response = await fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify({ action: actionName, dbId: currentDbId, data: payloadData }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
             const textResult = await response.text();
             let result;
-            try { result = JSON.parse(textResult); } 
-            catch(err) { throw new Error("URL API tidak valid atau Google menolak akses."); }
-
+            try { result = JSON.parse(textResult); } catch(err) { throw new Error("Gagal parsing API. Pastikan URL benar."); }
             if (result.status === "error") throw new Error(result.message);
             return typeof result.data === 'string' ? JSON.parse(result.data) : result.data;
         }
 
+        async function manualLogin() {
+            const inputId = document.getElementById('licenseKey').value.trim();
+            if (!inputId) { alert("Mohon masukkan ID Database Anda!"); return; }
+            await executeLogin(inputId);
+        }
+
         async function executeLogin(id) {
-            currentDbId = id; 
-            startLoading("Memverifikasi Lisensi..."); 
+            currentDbId = id; startLoading("Memverifikasi Lisensi..."); 
             try {
                 db = await apiCall("getAllData"); 
-                
                 try { localStorage.setItem('klikcrm_license_key', currentDbId); } catch(e){}
-                
                 document.getElementById('login-screen').style.opacity = '0';
                 setTimeout(() => {
                     document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('app-wrapper').style.display = 'block';
-                    
-                    if(isSimulation) {
-                        document.getElementById('badgeMode').innerText = "Simulation Mode";
-                        document.getElementById('badgeMode').classList.replace('bg-success', 'bg-warning');
-                        document.getElementById('badgeMode').classList.add('text-dark');
-                    }
+                    if(isSimulation) { document.getElementById('env-badge').innerText = "Simulation Mode"; document.getElementById('env-badge').classList.replace('bg-success', 'bg-warning'); document.getElementById('env-badge').classList.add('text-dark'); }
                     renderUI();
                 }, 500);
             } catch (error) {
                 try { localStorage.removeItem('klikcrm_license_key'); } catch(e){}
-                currentDbId = "";
-                const errMsg = error.message || "Gagal menghubungi server API";
-                if(typeof Swal !== 'undefined') Swal.fire('Akses Ditolak', errMsg, 'error');
-                else alert('Akses Ditolak: ' + errMsg);
-            } finally { 
-                endLoading(); 
-            }
+                currentDbId = ""; Swal.fire('Akses Ditolak', error.message, 'error');
+            } finally { endLoading(); }
         }
 
-        function logout() { 
-            try { localStorage.removeItem('klikcrm_license_key'); } catch(e){}
-            location.reload(); 
-        }
+        function logout() { try { localStorage.removeItem('klikcrm_license_key'); } catch(e){} location.reload(); }
 
+        // --- RENDER LOGIC ---
         function switchView(viewId) {
-            document.querySelectorAll('.sidebar .nav-link').forEach(link => { link.classList.remove('active'); if(link.getAttribute('onclick').includes(viewId)) link.classList.add('active'); });
-            document.querySelectorAll('.bottom-nav-link').forEach(link => { link.classList.remove('active'); if(link.getAttribute('onclick').includes(viewId)) link.classList.add('active'); });
-            document.querySelectorAll('.app-view').forEach(view => view.classList.remove('active'));
+            document.querySelectorAll('.sidebar .nav-link, .bottom-nav-link').forEach(l => l.classList.remove('active'));
+            document.querySelectorAll(`[onclick="switchView('${viewId}')"]`).forEach(l => l.classList.add('active'));
+            document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
-
-            const titles = { 'dashboard': 'Dashboard Overview', 'leads': 'Master Contact', 'followup': 'Follow Up Action', 'pipeline': 'Sales Pipeline', 'projects': 'Project Management' };
-            document.getElementById('page-title').innerText = titles[viewId];
-            
-            if(viewId === 'followup') renderFollowUpTable(); 
-            if(viewId === 'projects') renderProjectsTable();
             if(viewId === 'pipeline') renderKanbanBoard();
             window.scrollTo(0, 0);
         }
 
-        function startLoading(text = "Memuat...") { document.getElementById('loading-text').innerText = text; document.getElementById('loading-overlay').style.display = 'flex'; }
+        function startLoading(t="Memuat...") { document.getElementById('loading-text').innerText = t; document.getElementById('loading-overlay').style.display = 'flex'; }
         function endLoading() { document.getElementById('loading-overlay').style.display = 'none'; }
-        function formatRupiah(number) { if(isNaN(number) || number === null || number === '') return "Rp 0"; return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(number); }
-
-        function renderUI() { 
-            updateProductFilter(); 
-            renderDashboard(); 
-            renderLeadsTable(); 
-            renderFollowUpTable(); 
-            renderKanbanBoard(); 
-            renderProjectsTable(); 
+        function formatRupiah(num) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num || 0); }
+        function formatWA(phone) { let p = phone.replace(/\D/g, ''); if(p.startsWith('0')) p = '62' + p.substring(1); return p; }
+        
+        function openWA(phone, company) {
+            let num = formatWA(phone);
+            let text = encodeURI(`Halo Bapak/Ibu dari ${company}, perkenalkan saya dari klikSistem...`);
+            window.open(`https://wa.me/${num}?text=${text}`, '_blank');
         }
 
-        function updateProductFilter() {
-            const filterSelect = document.getElementById('filterProduct');
-            if(!filterSelect) return;
-            const currentVal = filterSelect.value;
-            
-            const uniqueProducts = [...new Set(db.leads.filter(l => l.product && l.product.trim() !== '').map(l => l.product.trim()))];
-            
-            let htmlOptions = `<option value="ALL">Semua Produk</option>`;
-            uniqueProducts.forEach(prod => {
-                htmlOptions += `<option value="${prod}">${prod}</option>`;
-            });
-            
-            filterSelect.innerHTML = htmlOptions;
-            if(uniqueProducts.includes(currentVal)) { filterSelect.value = currentVal; }
-        }
-
-        function exportToCSV() {
-            if(!db.leads || db.leads.length === 0) {
-                alert("Tidak ada data untuk diexport.");
-                return;
+        function renderUI() {
+            const elProd = document.getElementById('filterProduct');
+            if(elProd) {
+                const uniqueProds = [...new Set(db.leads.filter(l => l.product).map(l => l.product.trim()))];
+                const curr = elProd.value;
+                elProd.innerHTML = `<option value="ALL">Semua Produk</option>` + uniqueProds.map(p => `<option value="${p}">${p}</option>`).join('');
+                if(uniqueProds.includes(curr)) elProd.value = curr;
             }
-            
-            const headers = ["ID", "Company", "PIC", "Phone", "Status", "Product", "Value", "Source", "Date", "FollowUpCount", "LastFollowUp"];
-            let csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n";
 
-            db.leads.forEach(row => {
-                const values = headers.map(header => {
-                    let val = row[header.toLowerCase()] || "";
-                    return `"${String(val).replace(/"/g, '""')}"`;
-                });
-                csvContent += values.join(",") + "\n";
-            });
+            let today = new Date().toISOString().split('T')[0];
+            let dueLeads = db.leads.filter(l => l.nextFollowUp === today && l.status !== "Lost" && l.status !== "Won" && l.status !== "Loyal");
+            if (dueLeads.length > 0) {
+                document.getElementById('notif-badge').innerText = dueLeads.length; document.getElementById('notif-badge').classList.remove('d-none');
+                document.getElementById('reminder-box').classList.remove('d-none'); document.getElementById('reminder-count').innerText = dueLeads.length;
+            } else {
+                document.getElementById('notif-badge').classList.add('d-none'); document.getElementById('reminder-box').classList.add('d-none');
+            }
 
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Master_Contact_Database_${new Date().toISOString().split('T')[0]}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
+            let activeLeads = db.leads.filter(l => l.status !== "Lost");
+            let deadLeads = db.leads.filter(l => l.status === "Lost" || (l.followUpCount >= 5 && l.status !== 'Won' && l.status !== 'Loyal'));
 
-        function renderDashboard() {
-            document.getElementById('dash-leads').innerText = db.leads.length;
-            document.getElementById('dash-proposals').innerText = db.pipeline.filter(p => p.stage === 'Proposal Sent' || p.stage === 'Negotiation').length;
-            const totalWon = db.pipeline.filter(p => p.stage === 'Won').length;
-            document.getElementById('dash-winrate').innerText = db.leads.length > 0 ? Math.round((totalWon / db.leads.length) * 100) + '%' : '0%';
+            document.getElementById('dash-leads').innerText = activeLeads.length;
             document.getElementById('dash-revenue').innerText = formatRupiah(db.pipeline.reduce((sum, item) => sum + Number(item.value || 0), 0));
-
-            let activeLeads = db.leads.filter(l => l.status !== "Lost" && l.status !== "Loyal");
-            activeLeads.sort((a, b) => {
-                let tA = new Date(a.lastFollowUp === '-' ? '2000-01-01' : a.lastFollowUp).getTime();
-                let tB = new Date(b.lastFollowUp === '-' ? '2000-01-01' : b.lastFollowUp).getTime();
-                if(isNaN(tA)) tA = 0; if(isNaN(tB)) tB = 0;
-                return tA - tB;
-            });
-            
-            document.getElementById('urgent-followup-list').innerHTML = activeLeads.slice(0, 3).map(lead => `
-                <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
-                    <div class="text-truncate pe-2"><div class="fw-bold text-truncate" style="max-width: 200px;">${lead.company}</div><small class="text-muted"><i class="bi bi-person"></i> ${lead.pic} | ${lead.status}</small></div>
-                    <button class="btn btn-sm btn-outline-primary rounded-circle" onclick="switchView('followup')"><i class="bi bi-telephone"></i></button>
-                </div>`).join('');
+            document.getElementById('dash-dead').innerText = deadLeads.length;
 
             const ctx = document.getElementById('funnelChart').getContext('2d');
-            const stageCounts = STAGES.map(stage => db.pipeline.filter(p => p.stage === stage).length);
-            const barColors = ['#94a3b8', '#60a5fa', '#3b82f6', '#8b5cf6', '#f59e0b', '#10b981', '#ef4444'];
             if(funnelChartInstance) funnelChartInstance.destroy();
-            funnelChartInstance = new Chart(ctx, {
-                type: 'bar', data: { labels: STAGES, datasets: [{ data: stageCounts, backgroundColor: barColors, borderRadius: 6 }] },
-                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { stepSize: 1 } }, y: { grid: { display: false } } } }
-            });
-        }
+            funnelChartInstance = new Chart(ctx, { type: 'bar', data: { labels: STAGES, datasets: [{ data: STAGES.map(s => db.pipeline.filter(p => p.stage === s).length), backgroundColor: ['#94a3b8', '#60a5fa', '#3b82f6', '#8b5cf6', '#f59e0b', '#10b981', '#ef4444'] }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
 
-        function renderLeadsTable() {
-            const tbody = document.getElementById('leads-table-body'); tbody.innerHTML = '';
-            db.leads.forEach((lead) => {
-                let badgeClass = 'bg-secondary'; if(lead.status === 'Hot Lead') badgeClass = 'bg-danger'; if(lead.status === 'Warm Lead') badgeClass = 'bg-warning text-dark'; if(lead.status === 'Proposal') badgeClass = 'bg-primary'; if(lead.status === 'Loyal') badgeClass = 'bg-success'; if(lead.status === 'Lost') badgeClass = 'bg-dark';
-                tbody.innerHTML += `<tr>
-                        <td class="fw-bold text-muted small">${lead.id}</td>
-                        <td><div class="fw-bold text-truncate" style="max-width: 150px;">${lead.company}</div><div class="small"><span class="badge border text-dark mt-1">${lead.product || '-'}</span></div></td>
-                        <td class="small">${lead.pic}<br><span class="text-muted">${lead.phone}</span></td>
-                        <td><span class="badge ${badgeClass}">${lead.status}</span></td>
-                        <td class="text-success fw-bold small">${formatRupiah(lead.value)}</td>
-                        <td><button class="btn btn-sm btn-light text-primary mb-1" onclick="editLead('${lead.id}')"><i class="bi bi-pencil-square"></i></button> <button class="btn btn-sm btn-light text-danger mb-1" onclick="deleteLead('${lead.id}')"><i class="bi bi-trash"></i></button></td>
-                    </tr>`;
+            const tbLeads = document.getElementById('leads-table-body'); tbLeads.innerHTML = '';
+            db.leads.forEach(l => {
+                let bg = l.status === 'Hot Lead' ? 'bg-danger' : (l.status === 'Lost' ? 'bg-dark' : 'bg-secondary');
+                tbLeads.innerHTML += `<tr><td><b>${l.company}</b><br><small class="text-muted">${l.id}</small></td><td>${l.pic}<br><small><i class="bi bi-whatsapp text-success"></i> ${l.phone}</small></td><td><span class="badge ${bg}">${l.status}</span></td><td><b class="text-primary">${l.product}</b><br><small>${formatRupiah(l.value)}</small></td><td><button class="btn btn-sm btn-light" onclick="editLead('${l.id}')"><i class="bi bi-pencil-square"></i></button> <button class="btn btn-sm btn-light text-danger" onclick="deleteLead('${l.id}')"><i class="bi bi-trash"></i></button></td></tr>`;
             });
-        }
 
-        function renderFollowUpTable() {
-            const tbody = document.getElementById('followup-table-body'); if(!tbody) return; tbody.innerHTML = '';
-            const filterProduct = document.getElementById('filterProduct') ? document.getElementById('filterProduct').value : "ALL";
-            const filterStatus = document.getElementById('filterStatus') ? document.getElementById('filterStatus').value : "ALL";
-            
-            // PERBAIKAN: Hilangkan pembatasan hardcode agar status apa pun bisa tampil
-            let filteredLeads = [...db.leads];
-            
-            if (filterProduct !== "ALL") filteredLeads = filteredLeads.filter(l => l.product === filterProduct);
-            
-            if (filterStatus !== "ALL") {
-                filteredLeads = filteredLeads.filter(l => l.status === filterStatus);
-            } else {
-                // Jika pilih Semua Status, sembunyikan yang Lost saja biar tabel bersih
-                filteredLeads = filteredLeads.filter(l => l.status !== "Lost");
-            }
-            
-            filteredLeads.sort((a, b) => {
-                let tA = new Date(a.lastFollowUp === '-' ? '2000-01-01' : a.lastFollowUp).getTime();
-                let tB = new Date(b.lastFollowUp === '-' ? '2000-01-01' : b.lastFollowUp).getTime();
-                if(isNaN(tA)) tA = 0; if(isNaN(tB)) tB = 0;
-                return tA - tB;
+            const tbFu = document.getElementById('followup-table-body'); tbFu.innerHTML = '';
+            const fProd = document.getElementById('filterProduct').value; const fStat = document.getElementById('filterStatus').value;
+            let fuList = db.leads.filter(l => l.status !== 'Lost' && l.status !== 'Loyal' && l.status !== 'Won');
+            if(fStat === 'TODAY') fuList = fuList.filter(l => l.nextFollowUp === today); else if(fStat !== 'ALL') fuList = fuList.filter(l => l.status === fStat);
+            fuList.forEach(l => {
+                let isDue = (l.nextFollowUp === today) ? `<span class="badge bg-warning text-dark"><i class="bi bi-alarm"></i> Hari Ini</span>` : l.nextFollowUp;
+                tbFu.innerHTML += `<tr><td class="ps-4 fw-bold">${l.company}<br><small class="text-muted fw-normal">${l.pic}</small></td><td><span class="badge bg-secondary mb-1">${l.status}</span><br><div class="progress" style="height:5px; width:100px;"><div class="progress-bar bg-success" style="width:${(l.followUpCount/5)*100}%"></div></div><small style="font-size:0.65rem">${l.followUpCount}x Dihubungi</small></td><td class="small fw-bold text-primary">${isDue}</td><td class="pe-4 text-end"><button class="btn btn-sm btn-success rounded-pill me-1" onclick="openWA('${l.phone}', '${l.company}')"><i class="bi bi-whatsapp"></i> Chat</button><button class="btn btn-sm btn-outline-primary rounded-pill" onclick="openLogModal('${l.id}')"><i class="bi bi-journal-plus"></i> Log</button></td></tr>`;
             });
-            
-            filteredLeads.forEach(lead => {
-                let badgeClass = lead.status === 'Hot Lead' ? 'bg-danger' : (lead.status === 'Warm Lead' ? 'bg-warning text-dark' : 'bg-secondary');
-                if(lead.status === 'Proposal') badgeClass = 'bg-primary';
-                if(lead.status === 'Loyal') badgeClass = 'bg-success';
-                let fuCount = parseInt(lead.followUpCount) || 0; let percent = (fuCount / 5) * 100; if(percent > 100) percent = 100;
-                let barColor = "#10b981"; if(lead.status === "Cold Lead" && fuCount >= 3) barColor = "#f59e0b"; if(lead.status === "Cold Lead" && fuCount >= 4) barColor = "#ef4444";
-                tbody.innerHTML += `<tr>
-                        <td class="ps-4"><div class="fw-bold">${lead.company}</div><small class="text-muted"><i class="bi bi-person"></i> ${lead.pic} | ${lead.phone}</small></td>
-                        <td><div><span class="badge bg-light text-dark border">${lead.product || '-'}</span></div><div class="mt-1"><span class="badge ${badgeClass}">${lead.status}</span></div></td>
-                        <td><div class="d-flex justify-content-between small text-muted mb-1"><span>Follow Up: ${fuCount}x</span></div><div class="progress-indicator"><div class="progress-bar-custom" style="width: ${percent}%; background-color: ${barColor}"></div></div></td>
-                        <td><small class="text-muted"><i class="bi bi-calendar-check"></i> ${lead.lastFollowUp || '-'}</small></td>
-                        <td class="pe-4 text-end"><button class="btn btn-sm btn-outline-primary rounded-pill" onclick="openLogModal('${lead.id}')"><i class="bi bi-plus-circle"></i> Log</button></td>
-                    </tr>`;
-            });
+
+            const tbDead = document.getElementById('dead-table-body'); tbDead.innerHTML = '';
+            deadLeads.forEach(l => { tbDead.innerHTML += `<tr><td class="fw-bold">${l.company}<br><small><i class="bi bi-whatsapp"></i> ${l.phone}</small></td><td>${l.product}</td><td><span class="badge bg-dark">${l.followUpCount}x Follow Up</span></td><td><button class="btn btn-sm btn-danger" onclick="deleteLead('${l.id}')"><i class="bi bi-trash"></i></button></td></tr>`; });
+
+            renderKanbanBoard();
         }
 
         function renderKanbanBoard() {
             const board = document.getElementById('kanban-board'); board.innerHTML = '';
             STAGES.forEach(stage => {
-                const stageItems = db.pipeline.filter(p => p.stage === stage);
-                const stageTotal = stageItems.reduce((sum, item) => sum + Number(item.value || 0), 0);
-                const stageId = stage.replace(/\s+/g, '-');
-                board.innerHTML += `
-                    <div class="kanban-column">
-                        <div class="kanban-header"><span>${stage}</span><span class="badge bg-secondary rounded-pill">${stageItems.length}</span></div>
-                        <div class="p-2 text-center text-muted small border-bottom bg-light">${formatRupiah(stageTotal)}</div>
-                        <div class="kanban-body" id="kanban-${stageId}" data-stage="${stage}">
-                            ${stageItems.map(item => `<div class="kanban-card" data-id="${item.id}"><div class="company text-truncate">${item.company}</div><div class="value">${formatRupiah(item.value)}</div></div>`).join('')}
-                        </div>
-                    </div>`;
+                const items = db.pipeline.filter(p => p.stage === stage);
+                board.innerHTML += `<div class="kanban-column"><div class="kanban-header"><span>${stage}</span><span class="badge bg-secondary">${items.length}</span></div><div class="kanban-body" id="kan-${stage.replace(/\s/g,'')}">${items.map(i => `<div class="kanban-card" data-id="${i.id}"><b>${i.company}</b><br><small class="text-success">${formatRupiah(i.value)}</small></div>`).join('')}</div></div>`;
             });
             STAGES.forEach(stage => {
-                const stageId = stage.replace(/\s+/g, '-'); const columnEl = document.getElementById(`kanban-${stageId}`);
-                if (columnEl) {
-                    new Sortable(columnEl, {
-                        group: 'pipeline', animation: 150, delay: 100, delayOnTouchOnly: true, ghostClass: "sortable-ghost", dragClass: "sortable-drag",
-                        onEnd: async function (evt) {
-                            const itemId = evt.item.getAttribute('data-id'); const newStage = evt.to.getAttribute('data-stage'); const oldStage = evt.from.getAttribute('data-stage');
-                            if (newStage !== oldStage) {
-                                let idx = db.pipeline.findIndex(p => p.id === itemId);
-                                if(idx > -1) { 
-                                    db.pipeline[idx].stage = newStage; renderDashboard(); renderProjectsTable(); renderKanbanBoard();
-                                    if(!isSimulation) { try { await apiCall("savePipeline", db.pipeline[idx]); } catch(e) {} }
-                                }
-                            }
-                        }
-                    });
+                const el = document.getElementById(`kan-${stage.replace(/\s/g,'')}`);
+                if(el) {
+                    new Sortable(el, { group: 'pipe', animation: 150, onEnd: async function(evt) {
+                        const id = evt.item.getAttribute('data-id'); const newStage = evt.to.parentElement.id.replace('kan-', '');
+                        let idx = db.pipeline.findIndex(p => p.id === id);
+                        if(idx > -1) { db.pipeline[idx].stage = newStage; renderUI(); if(!isSimulation) await apiCall("savePipeline", db.pipeline[idx]); }
+                    }});
                 }
             });
         }
 
-        function renderProjectsTable() {
-            const tbody = document.getElementById('projects-table-body'); if(!tbody) return; tbody.innerHTML = '';
-            const wonProjects = db.pipeline.filter(p => p.stage === 'Won');
-            document.getElementById('total-projects').innerText = wonProjects.length + " Project Aktif";
-            if(wonProjects.length === 0) { tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-5">Belum ada project yang Won (Deal).</td></tr>`; return; }
-            wonProjects.forEach(project => {
-                const leadDetail = db.leads.find(l => l.id === project.id) || {}; const productName = leadDetail.product || 'Custom Project';
-                tbody.innerHTML += `<tr>
-                        <td class="fw-bold text-muted small">${project.id}</td>
-                        <td><div class="fw-bold">${project.company}</div><div class="small text-muted"><i class="bi bi-box"></i> ${productName}</div></td>
-                        <td class="text-success fw-bold small">${formatRupiah(project.value)}</td>
-                        <td><span class="badge bg-info text-dark">Tahap Planning</span></td>
-                        <td style="width: 200px;"><div class="d-flex justify-content-between small text-muted mb-1"><span>15% Selesai</span></div><div class="progress" style="height: 6px;"><div class="progress-bar" style="width: 15%; background-color: var(--secondary);"></div></div></td>
-                        <td><button class="btn btn-sm btn-outline-primary rounded-pill" onclick="alert('Fitur detail task sedang dalam pengembangan')">Kelola Task</button></td>
-                    </tr>`;
-            });
-        }
-
-        // --- CRUD ACTIONS ---
-        function openLeadModal() { document.getElementById('leadForm').reset(); document.getElementById('leadId').value = ''; document.getElementById('followUpCount').value = 0; document.getElementById('lastFollowUp').value = '-'; if(leadModalInstance) leadModalInstance.show(); }
-        function editLead(id) {
-            const lead = db.leads.find(l => l.id === id);
-            if(lead) { ['leadId', 'company', 'pic', 'phone', 'status', 'value', 'product', 'followUpCount', 'lastFollowUp'].forEach(key => document.getElementById(key).value = lead[key] || ''); document.getElementById('source').value = lead.source || 'Website'; if(leadModalInstance) leadModalInstance.show(); }
-        }
+        function openLeadModal() { document.getElementById('leadForm').reset(); document.getElementById('leadId').value = ''; leadModalInstance.show(); }
+        function editLead(id) { const l = db.leads.find(x => x.id === id); if(l) { ['leadId','company','pic','phone','product','value','source','status'].forEach(k => { if(document.getElementById(k)) document.getElementById(k).value = l[k]||''; }); leadModalInstance.show(); } }
         
         async function saveLead() {
-            const data = {
-                id: document.getElementById('leadId').value || `LD-${Math.floor(1000 + Math.random() * 9000)}`, company: document.getElementById('company').value, pic: document.getElementById('pic').value, phone: document.getElementById('phone').value, status: document.getElementById('status').value, value: Number(document.getElementById('value').value), source: document.getElementById('source').value, product: document.getElementById('product').value, followUpCount: document.getElementById('followUpCount').value, lastFollowUp: document.getElementById('lastFollowUp').value, date: new Date().toISOString().split('T')[0]
-            };
-            startLoading("Menyimpan Data...");
-            try { db = await apiCall("saveLead", data); if(leadModalInstance) leadModalInstance.hide(); renderUI(); } catch (e) { Swal.fire('Error', e.message, 'error'); } finally { endLoading(); }
+            const data = { id: document.getElementById('leadId').value || `LD-${Date.now()}`, company: document.getElementById('company').value, pic: document.getElementById('pic').value, phone: document.getElementById('phone').value, product: document.getElementById('product').value, value: Number(document.getElementById('value').value), source: document.getElementById('source').value, status: document.getElementById('status').value, followUpCount:0, lastFollowUp:"-", nextFollowUp:"-" };
+            startLoading("Menyimpan..."); try { db = await apiCall("saveLead", data); leadModalInstance.hide(); renderUI(); } catch(e) { Swal.fire('Error', e.message, 'error'); } finally { endLoading(); }
         }
-        
+
         async function deleteLead(id) {
-            if (confirm('Hapus Lead ini?')) { startLoading("Menghapus Data..."); try { db = await apiCall("deleteLead", id); renderUI(); } catch (e) { Swal.fire('Error', e.message, 'error'); } finally { endLoading(); } }
+            if(!confirm('Hapus Data Permanen?')) return;
+            startLoading("Menghapus..."); try { db = await apiCall("deleteLead", id); renderUI(); } catch(e) {} finally { endLoading(); }
         }
-        
-        function openLogModal(id) {
-            const lead = db.leads.find(l => l.id === id); document.getElementById('logForm').reset(); document.getElementById('logLeadId').value = lead.id; document.getElementById('logCompanyName').innerText = lead.company; document.getElementById('logNewStatus').value = lead.status; if(logModalInstance) logModalInstance.show();
-        }
+
+        function openLogModal(id) { const l = db.leads.find(x => x.id === id); document.getElementById('logForm').reset(); document.getElementById('logLeadId').value = l.id; document.getElementById('logNewStatus').value = l.status; logModalInstance.show(); }
         
         async function saveLogFollowUp() {
-            const leadId = document.getElementById('logLeadId').value; const lead = db.leads.find(l => l.id === leadId);
-            lead.followUpCount = (parseInt(lead.followUpCount) || 0) + 1; lead.lastFollowUp = new Date().toISOString().split('T')[0]; lead.status = document.getElementById('logNewStatus').value;
-            
-            if (lead.followUpCount >= 5 && lead.status === "Cold Lead") {
-                if(logModalInstance) logModalInstance.hide();
-                const res = await Swal.fire({ title: 'Dead Lead?', text: `Dihubungi ${lead.followUpCount}x masih Cold. Arsipkan (Lost)?`, icon: 'warning', showCancelButton: true, confirmButtonText: 'Ya, LOST' });
-                if (res.isConfirmed) lead.status = "Lost";
+            const id = document.getElementById('logLeadId').value; let l = db.leads.find(x => x.id === id);
+            l.followUpCount = (parseInt(l.followUpCount)||0) + 1; l.lastFollowUp = new Date().toISOString().split('T')[0];
+            l.status = document.getElementById('logNewStatus').value; l.nextFollowUp = document.getElementById('logNextFollowUp').value || "-";
+
+            if(l.followUpCount >= 5 && l.status !== 'Hot Lead' && l.status !== 'Won' && l.status !== 'Loyal') {
+                Swal.fire({title:'Dead Lead Detected!', text:'Otomatis masuk ke Dead List.', icon:'warning'}); l.status = 'Lost';
             }
-            startLoading("Menyimpan Log...");
-            try { db = await apiCall("saveLead", lead); if(logModalInstance) logModalInstance.hide(); renderUI(); } catch (e) { Swal.fire('Error', e.message, 'error'); } finally { endLoading(); }
+            startLoading("Mencatat..."); try { db = await apiCall("saveLead", l); logModalInstance.hide(); renderUI(); } catch(e) {} finally { endLoading(); }
+        }
+
+        function exportToCSV() {
+            if(db.leads.length === 0) return alert("Data kosong");
+            let csv = "Company,PIC,Phone,Product,Value\n"; db.leads.forEach(l => { csv += `"${l.company}","${l.pic}","${l.phone}","${l.product}","${l.value}"\n`; });
+            const link = document.createElement("a"); link.href = "data:text/csv;charset=utf-8," + encodeURI(csv); link.download = `Kontak_CRM_${new Date().toISOString().split('T')[0]}.csv`; link.click();
+        }
+
+        async function importCSVData(event) {
+            const file = event.target.files[0]; if(!file) return; const reader = new FileReader();
+            reader.onload = async function(e) {
+                const text = e.target.result; const rows = text.split('\n').slice(1).filter(r => r.trim() !== '');
+                const dataArr = rows.map(r => r.split(',').map(c => c.replace(/"/g, '').trim()));
+                startLoading("Mengimpor Data..."); try { db = await apiCall("importLeads", dataArr); renderUI(); Swal.fire('Sukses','Import Selesai','success'); } catch(err){} finally { endLoading(); }
+            };
+            reader.readAsText(file);
         }
     </script>
 </body>
