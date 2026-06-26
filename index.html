@@ -28,20 +28,9 @@
         .nav-link i { margin-right: 10px; font-size: 1.1rem; }
         .badge-notif { position: absolute; right: 20px; background: #ef4444; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.7rem; }
 
-        /* SPESIAL STYLING UNTUK DEAD LIST DI SIDEBAR */
-        .nav-link.dead-list-item { 
-            color: #ef4444 !important; 
-            background: rgba(239, 68, 68, 0.1); 
-            border-left: 4px solid #ef4444; 
-            font-weight: 600; 
-            margin-top: 20px; 
-            border-radius: 0 8px 8px 0;
-        }
-        .nav-link.dead-list-item:hover, .nav-link.dead-list-item.active { 
-            background: #ef4444 !important; 
-            color: white !important; 
-            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
-        }
+        /* SPESIAL STYLING DEAD LIST DI SIDEBAR */
+        .nav-link.dead-list-item { color: #ef4444 !important; background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; font-weight: 600; margin-top: 20px; border-radius: 0 8px 8px 0; }
+        .nav-link.dead-list-item:hover, .nav-link.dead-list-item.active { background: #ef4444 !important; color: white !important; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3); }
 
         .main-content { margin-left: 260px; padding: 30px; min-height: 100vh; }
         .topbar { background: white; padding: 15px 30px; border-radius: 12px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
@@ -108,14 +97,13 @@
                 <li class="nav-item"><a class="nav-link position-relative" onclick="switchView('followup')"><i class="bi bi-telephone-outbound-fill"></i> Follow Up <span id="notif-badge" class="badge-notif d-none">0</span></a></li>
                 <li class="nav-item"><a class="nav-link" onclick="switchView('pipeline')"><i class="bi bi-kanban"></i> Sales Pipeline</a></li>
                 <li class="nav-item"><a class="nav-link" onclick="switchView('projects')"><i class="bi bi-briefcase-fill"></i> Projects</a></li>
-                
                 <li class="nav-item"><a class="nav-link dead-list-item" onclick="switchView('deadlist')"><i class="bi bi-skull-fill"></i> Dead List</a></li>
             </ul>
             <div class="position-absolute bottom-0 w-100 p-3"><button class="btn btn-danger w-100" onclick="logout()"><i class="bi bi-box-arrow-left"></i> Logout</button></div>
         </nav>
 
         <nav class="bottom-nav">
-            <div class="bottom-nav-link active" onclick="switchView('dashboard')"><i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></div>
+            <div class="bottom-nav-link active" onclick="switchView('dashboard')"><i class="bi bi-grid-1x2-fill"></i><span>Utama</span></div>
             <div class="bottom-nav-link" onclick="switchView('leads')"><i class="bi bi-people-fill"></i><span>Kontak</span></div>
             <div class="bottom-nav-link" onclick="switchView('followup')"><i class="bi bi-telephone-outbound-fill"></i><span>Aktivitas</span></div>
             <div class="bottom-nav-link" onclick="switchView('pipeline')"><i class="bi bi-kanban"></i><span>Pipeline</span></div>
@@ -185,7 +173,12 @@
             <div id="projects" class="app-view">
                 <div class="card border-0 shadow-sm rounded-4 p-4">
                     <h5 class="fw-bold mb-4">Project Management (Won Deals)</h5>
-                    <div class="table-responsive"><table class="table align-middle"><thead class="table-light"><tr><th>ID Project</th><th>Perusahaan</th><th>Status Project</th></tr></thead><tbody id="projects-table-body"></tbody></table></div>
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead class="table-light"><tr><th>ID Project</th><th>Perusahaan & Produk</th><th>Status Project</th></tr></thead>
+                            <tbody id="projects-table-body"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -197,44 +190,22 @@
     </div>
 
     <div class="modal fade" id="leadModal" tabindex="-1">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content border-0">
-                <div class="modal-header bg-dark text-white"><h5 class="modal-title text-warning"><i class="bi bi-person-plus"></i> Form Database Lead</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
-                <div class="modal-body p-4">
-                    <form id="leadForm">
-                        <input type="hidden" id="leadId"><input type="hidden" id="followUpCount" value="0"><input type="hidden" id="lastFollowUp" value="-"><input type="hidden" id="nextFollowUp" value="-">
-                        <div class="row g-3">
-                            <div class="col-md-6"><label>Perusahaan</label><input type="text" class="form-control" id="company" required></div>
-                            <div class="col-md-6"><label>Nama PIC</label><input type="text" class="form-control" id="pic" required></div>
-                            <div class="col-md-6"><label>No WA</label><input type="text" class="form-control" id="phone" placeholder="0812..." required></div>
-                            <div class="col-md-6"><label>Produk Diminati</label><input type="text" class="form-control" id="product" required></div>
-                            <div class="col-md-6"><label>Potensi (Rp)</label><input type="number" class="form-control" id="value" required></div>
-                            <div class="col-md-6"><label>Sumber</label><select class="form-select" id="source"><option>Website</option><option>Referral</option><option>Ads</option></select></div>
-                            <div class="col-md-6"><label>Status Awal</label><select class="form-select" id="status"><option>Cold Lead</option><option>Warm Lead</option><option>Hot Lead</option><option>Proposal</option><option>Loyal</option></select></div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer"><button type="button" class="btn btn-dark w-100" onclick="saveLead()">Simpan Database</button></div>
-            </div>
-        </div>
+        <div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content border-0"><div class="modal-header bg-dark text-white"><h5 class="modal-title text-warning">Form Database Lead</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body p-4"><form id="leadForm"><input type="hidden" id="leadId"><input type="hidden" id="followUpCount" value="0"><input type="hidden" id="lastFollowUp" value="-"><input type="hidden" id="nextFollowUp" value="-">
+                <div class="row g-3"><div class="col-md-6"><label>Perusahaan</label><input type="text" class="form-control" id="company" required></div><div class="col-md-6"><label>PIC</label><input type="text" class="form-control" id="pic" required></div><div class="col-md-6"><label>No WA</label><input type="text" class="form-control" id="phone" required></div><div class="col-md-6"><label>Produk</label><input type="text" class="form-control" id="product" required></div><div class="col-md-6"><label>Potensi (Rp)</label><input type="number" class="form-control" id="value" required></div><div class="col-md-6"><label>Sumber</label><select class="form-select" id="source"><option>Website</option><option>Referral</option><option>Ads</option></select></div><div class="col-md-6"><label>Status Awal</label><select class="form-select" id="status"><option>Cold Lead</option><option>Warm Lead</option><option>Hot Lead</option><option>Proposal</option><option>Loyal</option></select></div></div>
+            </form></div><div class="modal-footer"><button type="button" class="btn btn-dark w-100" onclick="saveLead()">Simpan Database</button></div>
+        </div></div>
     </div>
 
     <div class="modal fade" id="logModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
-                <div class="modal-header bg-primary text-white"><h5 class="modal-title"><i class="bi bi-headset"></i> Log Aktivitas Follow Up</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
-                <div class="modal-body p-4">
-                    <form id="logForm">
-                        <input type="hidden" id="logLeadId">
-                        <div class="mb-3"><h5 id="logCompanyName" class="fw-bold text-primary"></h5></div>
-                        <div class="mb-3"><label class="text-muted small">Update Status</label><select class="form-select" id="logNewStatus"><option value="Cold Lead">Tetap Cold Lead</option><option value="Warm Lead">Naik ke Warm Lead</option><option value="Hot Lead">Naik ke Hot Lead</option><option value="Proposal">Proposal / Nego</option><option value="Lost">Lost (Menyerah)</option></select></div>
-                        <div class="mb-3"><label>Catatan Interaksi</label><textarea class="form-control" id="logNotes" rows="2" required></textarea></div>
-                        <div class="mb-3"><label class="text-primary fw-bold"><i class="bi bi-calendar-event"></i> Jadwal Berikutnya</label><input type="date" class="form-control border-primary" id="logNextFollowUp"></div>
-                    </form>
-                </div>
-                <div class="modal-footer"><button type="button" class="btn btn-primary w-100" onclick="saveLogFollowUp()">Simpan Aktivitas</button></div>
-            </div>
-        </div>
+        <div class="modal-dialog modal-dialog-centered"><div class="modal-content border-0 shadow"><div class="modal-header bg-primary text-white"><h5 class="modal-title"><i class="bi bi-headset"></i> Log Aktivitas Follow Up</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body p-4"><form id="logForm"><input type="hidden" id="logLeadId">
+                <div class="mb-3"><h5 id="logCompanyName" class="fw-bold text-primary"></h5></div>
+                <div class="mb-3"><label class="text-muted small">Update Status</label><select class="form-select" id="logNewStatus"><option value="Cold Lead">Tetap Cold Lead</option><option value="Warm Lead">Naik ke Warm Lead</option><option value="Hot Lead">Naik ke Hot Lead</option><option value="Proposal">Proposal / Nego</option><option value="Lost">Lost (Menyerah)</option></select></div>
+                <div class="mb-3"><label>Catatan Interaksi</label><textarea class="form-control" id="logNotes" rows="2" required></textarea></div>
+                <div class="mb-3"><label class="text-primary fw-bold"><i class="bi bi-calendar-event"></i> Jadwal Berikutnya</label><input type="date" class="form-control border-primary" id="logNextFollowUp"></div>
+            </form></div><div class="modal-footer"><button type="button" class="btn btn-primary w-100" onclick="saveLogFollowUp()">Simpan Aktivitas</button></div>
+        </div></div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -262,6 +233,42 @@
             if (currentDbId) { document.getElementById('licenseKey').value = currentDbId; executeLogin(currentDbId); }
         });
 
+        // --- PENERJEMAH DATA DARI DAN KE SPREADSHEET (MENGATASI BUG UNDEFINED) ---
+        function formatDataToBackend(payloadData) {
+            if (!payloadData || typeof payloadData !== 'object' || Array.isArray(payloadData)) return payloadData;
+            let formatted = {};
+            for(let key in payloadData) {
+                if(key.toLowerCase() === 'id') formatted['Id'] = payloadData[key];
+                else formatted[key.toLowerCase()] = payloadData[key];
+            }
+            return formatted;
+        }
+
+        function normalizeReceivedData(database) {
+            const mapKeys = (arr) => {
+                if(!arr) return [];
+                return arr.map(item => {
+                    let safeItem = {};
+                    for(let k in item) {
+                        let lower = k.toLowerCase();
+                        if(lower === 'id') safeItem.id = item[k];
+                        else if(lower === 'leadid') safeItem.leadId = item[k];
+                        else if(lower === 'logid') safeItem.logId = item[k];
+                        else if(lower === 'followupcount') safeItem.followUpCount = item[k];
+                        else if(lower === 'lastfollowup') safeItem.lastFollowUp = item[k];
+                        else if(lower === 'nextfollowup') safeItem.nextFollowUp = item[k];
+                        else safeItem[lower] = item[k];
+                    }
+                    return safeItem;
+                });
+            };
+            database.leads = mapKeys(database.leads);
+            database.pipeline = mapKeys(database.pipeline);
+            database.followup = mapKeys(database.followup);
+            database.projects = mapKeys(database.projects);
+            return database;
+        }
+
         // --- FETCH VERCEL TO GAS API ---
         async function apiCall(actionName, payloadData = null) {
             if (GAS_API_URL === "" || GAS_API_URL.includes("MASUKKAN_URL")) {
@@ -271,20 +278,25 @@
                         let today = new Date().toISOString().split('T')[0];
                         if (actionName === "getAllData") {
                             resolve({
-                                leads: [{ id: "LD-001", company: "PT Simulasi (Tanpa URL)", pic: "Budi", phone: "0812", status: "Warm Lead", product: "ERP", value: 25000000, followUpCount: 2, nextFollowUp: today }],
-                                pipeline: [{ id: "LD-001", company: "PT Simulasi", value: 25000000, stage: "Need Analysis" }], followup: [], projects: []
+                                leads: [{ id: "LD-001", company: "PT Simulasi Cuan", pic: "Budi", phone: "0812", status: "Warm Lead", product: "ERP", value: 25000000, followUpCount: 2, nextFollowUp: today }],
+                                pipeline: [{ id: "LD-001", company: "PT Simulasi Cuan", value: 25000000, stage: "Won" }], followup: [], projects: []
                             });
                         } else if (actionName === "saveLead") { db.leads.push(payloadData); resolve(db); } else { resolve(db); } 
                     }, 500);
                 });
             }
 
-            const response = await fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify({ action: actionName, dbId: currentDbId, data: payloadData }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
+            // Membungkus payload agar huruf besarnya sesuai yg diharapkan Spreadsheet
+            let safePayload = formatDataToBackend(payloadData);
+
+            const response = await fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify({ action: actionName, dbId: currentDbId, data: safePayload }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
             const textResult = await response.text();
             let result;
-            try { result = JSON.parse(textResult); } catch(err) { throw new Error("Gagal parsing API. Pastikan URL Web App Apps Script benar."); }
+            try { result = JSON.parse(textResult); } catch(err) { throw new Error("Gagal terhubung ke API Spreadsheet."); }
             if (result.status === "error") throw new Error(result.message);
-            return typeof result.data === 'string' ? JSON.parse(result.data) : result.data;
+            
+            let rawData = typeof result.data === 'string' ? JSON.parse(result.data) : result.data;
+            return normalizeReceivedData(rawData); // Menormalkan huruf dari Spreadsheet
         }
 
         async function manualLogin() {
@@ -313,7 +325,6 @@
 
         function logout() { try { localStorage.removeItem('klikcrm_license_key'); } catch(e){} location.reload(); }
 
-        // --- RENDER LOGIC ---
         function switchView(viewId) {
             document.querySelectorAll('.sidebar .nav-link, .bottom-nav-link').forEach(l => l.classList.remove('active'));
             document.querySelectorAll(`[onclick="switchView('${viewId}')"]`).forEach(l => l.classList.add('active'));
@@ -334,18 +345,18 @@
             window.open(`https://wa.me/${num}?text=${text}`, '_blank');
         }
 
-        // FUNGSI HELPER UNTUK MENGAMBALIKAN WARNA STATUS
+        // FUNGSI PEMBERI WARNA STATUS
         function getStatusColor(status) {
             if(status === 'Hot Lead') return 'bg-danger';
             if(status === 'Warm Lead') return 'bg-warning text-dark';
             if(status === 'Proposal') return 'bg-primary';
-            if(status === 'Loyal') return 'bg-success';
+            if(status === 'Loyal' || status === 'Won') return 'bg-success';
             if(status === 'Lost') return 'bg-dark';
-            return 'bg-info text-dark'; // Cold Lead / Default
+            return 'bg-secondary'; // Default Cold Lead
         }
 
         function renderUI() {
-            // Update Filter Produk
+            // Update Filter
             const elProd = document.getElementById('filterProduct');
             if(elProd) {
                 const uniqueProds = [...new Set(db.leads.filter(l => l.product).map(l => String(l.product).trim()))];
@@ -355,33 +366,13 @@
             }
 
             let today = new Date().toISOString().split('T')[0];
+            let activeLeads = db.leads.filter(l => l.status !== "Lost");
+            let deadLeads = db.leads.filter(l => l.status === "Lost" || (l.followUpCount >= 5 && l.status !== 'Won' && l.status !== 'Loyal'));
 
-            // PERBAIKAN BUG CASE SENSITIVE: Mendeteksi format huruf besar atau kecil dari GAS
-            let activeLeads = [];
-            let deadLeads = [];
-            let dueLeadsCount = 0;
-
-            db.leads.forEach(l => {
-                // Mapping key aman
-                l._safeStatus = l.status || "Cold Lead";
-                l._safeNextFu = l.nextfollowup || l.nextFollowUp || "-";
-                l._safeFuCount = parseInt(l.followupcount || l.followUpCount) || 0;
-
-                if (l._safeNextFu === today && l._safeStatus !== "Lost" && l._safeStatus !== "Won" && l._safeStatus !== "Loyal") {
-                    dueLeadsCount++;
-                }
-
-                if (l._safeStatus === "Lost" || (l._safeFuCount >= 5 && l._safeStatus !== 'Won' && l._safeStatus !== 'Loyal')) {
-                    deadLeads.push(l);
-                } else {
-                    activeLeads.push(l);
-                }
-            });
-
-            // Notifikasi Jadwal
-            if (dueLeadsCount > 0) {
-                document.getElementById('notif-badge').innerText = dueLeadsCount; document.getElementById('notif-badge').classList.remove('d-none');
-                document.getElementById('reminder-box').classList.remove('d-none'); document.getElementById('reminder-count').innerText = dueLeadsCount;
+            let dueCount = activeLeads.filter(l => l.nextFollowUp === today && l.status !== "Won" && l.status !== "Loyal").length;
+            if (dueCount > 0) {
+                document.getElementById('notif-badge').innerText = dueCount; document.getElementById('notif-badge').classList.remove('d-none');
+                document.getElementById('reminder-box').classList.remove('d-none'); document.getElementById('reminder-count').innerText = dueCount;
             } else {
                 document.getElementById('notif-badge').classList.add('d-none'); document.getElementById('reminder-box').classList.add('d-none');
             }
@@ -395,29 +386,29 @@
             if(funnelChartInstance) funnelChartInstance.destroy();
             funnelChartInstance = new Chart(ctx, { type: 'bar', data: { labels: STAGES, datasets: [{ data: STAGES.map(s => db.pipeline.filter(p => p.stage === s).length), backgroundColor: ['#94a3b8', '#60a5fa', '#3b82f6', '#8b5cf6', '#f59e0b', '#10b981', '#ef4444'], borderRadius: 6 }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
 
-            // Master Leads Table (Dengan Warna Lengkap)
+            // Master Leads Table
             const tbLeads = document.getElementById('leads-table-body'); tbLeads.innerHTML = '';
             db.leads.forEach(l => {
-                let statusColor = getStatusColor(l._safeStatus);
-                tbLeads.innerHTML += `<tr><td><b>${l.company}</b><br><small class="text-muted">${l.id}</small></td><td>${l.pic}<br><small><i class="bi bi-whatsapp text-success"></i> ${l.phone}</small></td><td><span class="badge ${statusColor}">${l._safeStatus}</span></td><td><b class="text-primary">${l.product}</b><br><small>${formatRupiah(l.value)}</small></td><td><button class="btn btn-sm btn-light" onclick="editLead('${l.id}')"><i class="bi bi-pencil-square"></i></button> <button class="btn btn-sm btn-light text-danger" onclick="deleteLead('${l.id}')"><i class="bi bi-trash"></i></button></td></tr>`;
+                let badgeColor = getStatusColor(l.status);
+                tbLeads.innerHTML += `<tr><td><b class="text-dark">${l.company}</b><br><small class="text-muted fw-bold">${l.id}</small></td><td>${l.pic}<br><small><i class="bi bi-whatsapp text-success"></i> ${l.phone}</small></td><td><span class="badge ${badgeColor}">${l.status || 'Cold Lead'}</span></td><td><b class="text-primary">${l.product}</b><br><small>${formatRupiah(l.value)}</small></td><td><button class="btn btn-sm btn-light" onclick="editLead('${l.id}')"><i class="bi bi-pencil-square"></i></button> <button class="btn btn-sm btn-light text-danger" onclick="deleteLead('${l.id}')"><i class="bi bi-trash"></i></button></td></tr>`;
             });
 
             // Follow Up Table
             const tbFu = document.getElementById('followup-table-body'); tbFu.innerHTML = '';
             const fProd = document.getElementById('filterProduct').value; const fStat = document.getElementById('filterStatus').value;
             
-            let fuList = activeLeads.filter(l => l._safeStatus !== 'Loyal' && l._safeStatus !== 'Won');
-            if(fStat === 'TODAY') fuList = fuList.filter(l => l._safeNextFu === today); else if(fStat !== 'ALL') fuList = fuList.filter(l => l._safeStatus === fStat);
+            let fuList = activeLeads.filter(l => l.status !== 'Loyal' && l.status !== 'Won');
+            if(fStat === 'TODAY') fuList = fuList.filter(l => l.nextFollowUp === today); else if(fStat !== 'ALL') fuList = fuList.filter(l => l.status === fStat);
             if(fProd !== 'ALL') fuList = fuList.filter(l => l.product === fProd);
 
             fuList.forEach(l => {
-                let statusColor = getStatusColor(l._safeStatus);
-                let progressPercent = (l._safeFuCount / 5) * 100;
-                let isDueBadge = (l._safeNextFu === today) ? `<span class="badge bg-warning text-dark shadow-sm"><i class="bi bi-alarm"></i> Hari Ini</span>` : l._safeNextFu;
+                let badgeColor = getStatusColor(l.status);
+                let progressCount = parseInt(l.followUpCount) || 0;
+                let isDueBadge = (l.nextFollowUp === today) ? `<span class="badge bg-warning text-dark shadow-sm"><i class="bi bi-alarm"></i> Hari Ini</span>` : (l.nextFollowUp || '-');
                 
                 tbFu.innerHTML += `<tr>
                     <td class="ps-4 fw-bold">${l.company}<br><small class="text-muted fw-normal">${l.pic}</small></td>
-                    <td><span class="badge ${statusColor} mb-1">${l._safeStatus}</span><br><div class="progress" style="height:5px; width:100px;"><div class="progress-bar bg-success" style="width:${progressPercent}%"></div></div><small style="font-size:0.65rem">${l._safeFuCount}x Dihubungi</small></td>
+                    <td><span class="badge ${badgeColor} mb-1">${l.status || 'Cold Lead'}</span><br><div class="progress" style="height:5px; width:100px;"><div class="progress-bar bg-success" style="width:${(progressCount/5)*100}%"></div></div><small style="font-size:0.65rem">${progressCount}x Dihubungi</small></td>
                     <td class="small fw-bold text-primary">${isDueBadge}</td>
                     <td class="pe-4 text-end">
                         <button class="btn btn-sm btn-success rounded-pill me-1" onclick="openWA('${l.phone}', '${l.company}')"><i class="bi bi-whatsapp"></i> Chat</button>
@@ -429,10 +420,31 @@
             // Dead List Table
             const tbDead = document.getElementById('dead-table-body'); tbDead.innerHTML = '';
             deadLeads.forEach(l => { 
-                tbDead.innerHTML += `<tr><td class="fw-bold">${l.company}<br><small><i class="bi bi-whatsapp text-success"></i> ${l.phone}</small></td><td>${l.product}</td><td><span class="badge bg-dark">${l._safeFuCount}x Follow Up</span></td><td><button class="btn btn-sm btn-danger" onclick="deleteLead('${l.id}')"><i class="bi bi-trash"></i> Hapus Permanen</button></td></tr>`; 
+                tbDead.innerHTML += `<tr><td class="fw-bold">${l.company}<br><small><i class="bi bi-whatsapp text-success"></i> ${l.phone}</small></td><td>${l.product}</td><td><span class="badge bg-dark">${l.followUpCount || 5}x Follow Up</span></td><td><button class="btn btn-sm btn-danger" onclick="deleteLead('${l.id}')"><i class="bi bi-trash"></i> Hapus Permanen</button></td></tr>`; 
             });
 
+            renderProjectsTable();
             renderKanbanBoard();
+        }
+
+        function renderProjectsTable() {
+            const tbPrj = document.getElementById('projects-table-body'); tbPrj.innerHTML = '';
+            const wonProjects = db.pipeline.filter(p => p.stage === 'Won');
+            
+            if(wonProjects.length === 0) { 
+                tbPrj.innerHTML = `<tr><td colspan="3" class="text-center text-muted py-4">Belum ada client yang mencapai tahap Deal (Won).</td></tr>`; 
+                return; 
+            }
+
+            wonProjects.forEach(project => {
+                const leadDetail = db.leads.find(l => l.id === project.id) || {}; 
+                const productName = leadDetail.product || 'Sistem Custom';
+                tbPrj.innerHTML += `<tr>
+                    <td><small class="text-muted fw-bold">${project.id}</small></td>
+                    <td><b class="text-dark">${project.company}</b><br><span class="badge bg-light text-dark border mt-1">${productName}</span></td>
+                    <td><span class="badge bg-info text-dark">Tahap Planning</span><br><div class="progress mt-1" style="height: 5px; width: 100px;"><div class="progress-bar bg-secondary" style="width: 15%;"></div></div></td>
+                </tr>`;
+            });
         }
 
         function renderKanbanBoard() {
@@ -447,23 +459,26 @@
                     new Sortable(el, { group: 'pipe', animation: 150, onEnd: async function(evt) {
                         const id = evt.item.getAttribute('data-id'); const newStage = evt.to.parentElement.id.replace('kan-', '');
                         let idx = db.pipeline.findIndex(p => p.id === id);
-                        if(idx > -1) { db.pipeline[idx].stage = newStage; renderUI(); if(!isSimulation) await apiCall("savePipeline", db.pipeline[idx]); }
+                        if(idx > -1 && db.pipeline[idx].stage !== newStage) { 
+                            db.pipeline[idx].stage = newStage; 
+                            renderUI(); 
+                            if(!isSimulation) await apiCall("savePipeline", db.pipeline[idx]); 
+                        }
                     }});
                 }
             });
         }
 
-        // ==========================================
-        // ACTION MODALS
-        // ==========================================
         function openLeadModal() { document.getElementById('leadForm').reset(); document.getElementById('leadId').value = ''; leadModalInstance.show(); }
+        
         function editLead(id) { 
             const l = db.leads.find(x => x.id === id); 
             if(l) { 
-                ['leadId','company','pic','phone','product','value','source','status'].forEach(k => { if(document.getElementById(k)) document.getElementById(k).value = l[k]||''; }); 
-                document.getElementById('followUpCount').value = l.followupcount || l.followUpCount || 0;
-                document.getElementById('lastFollowUp').value = l.lastfollowup || l.lastFollowUp || "-";
-                document.getElementById('nextFollowUp').value = l.nextfollowup || l.nextFollowUp || "-";
+                ['company','pic','phone','product','value','source','status'].forEach(k => { if(document.getElementById(k)) document.getElementById(k).value = l[k]||''; }); 
+                document.getElementById('leadId').value = l.id;
+                document.getElementById('followUpCount').value = l.followUpCount || 0;
+                document.getElementById('lastFollowUp').value = l.lastFollowUp || "-";
+                document.getElementById('nextFollowUp').value = l.nextFollowUp || "-";
                 leadModalInstance.show(); 
             } 
         }
@@ -471,7 +486,7 @@
         async function saveLead() {
             const data = { 
                 id: document.getElementById('leadId').value || `LD-${Date.now()}`, company: document.getElementById('company').value, pic: document.getElementById('pic').value, phone: document.getElementById('phone').value, product: document.getElementById('product').value, value: Number(document.getElementById('value').value), source: document.getElementById('source').value, status: document.getElementById('status').value, 
-                followUpCount: document.getElementById('followUpCount').value||0, lastFollowUp: document.getElementById('lastFollowUp').value||"-", nextFollowUp: document.getElementById('nextFollowUp').value||"-" 
+                followUpCount: document.getElementById('followUpCount').value || 0, lastFollowUp: document.getElementById('lastFollowUp').value || "-", nextFollowUp: document.getElementById('nextFollowUp').value || "-" 
             };
             startLoading("Menyimpan..."); try { db = await apiCall("saveLead", data); leadModalInstance.hide(); renderUI(); } catch(e) { Swal.fire('Error', e.message, 'error'); } finally { endLoading(); }
         }
@@ -486,7 +501,7 @@
             document.getElementById('logForm').reset(); 
             document.getElementById('logLeadId').value = l.id; 
             document.getElementById('logCompanyName').innerText = l.company;
-            document.getElementById('logNewStatus').value = l.status || "Cold Lead"; 
+            document.getElementById('logNewStatus').value = l.status || 'Cold Lead'; 
             logModalInstance.show(); 
         }
         
@@ -494,10 +509,7 @@
             const id = document.getElementById('logLeadId').value; 
             let l = db.leads.find(x => x.id === id);
             
-            // Increment Count
-            let currentCount = parseInt(l.followupcount || l.followUpCount) || 0;
-            l.followUpCount = currentCount + 1; 
-            
+            l.followUpCount = (parseInt(l.followUpCount) || 0) + 1; 
             l.lastFollowUp = new Date().toISOString().split('T')[0];
             l.status = document.getElementById('logNewStatus').value; 
             l.nextFollowUp = document.getElementById('logNextFollowUp').value || "-";
