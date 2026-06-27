@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>klikCRM Pro - Enterprise Cloud</title>
+    <!-- LIBRARIES -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -12,7 +13,6 @@
         :root { --primary: #0a192f; --brand-color: #FFB800; --secondary: #1e88e5; --accent: #10b981; --bg-color: #f3f4f6; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: #1f2937; overflow-x: hidden; }
 
-        /* LOGIN SCREEN */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at top right, #112240, var(--primary)); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2000; transition: opacity 0.5s; }
         .login-box { background: rgba(255, 255, 255, 0.98); padding: 45px 40px; border-radius: 20px; width: 100%; max-width: 420px; box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(255, 184, 0, 0.05); text-align: center; }
         .brand-text { color: var(--primary); font-weight: 800; font-size: 2rem; letter-spacing: -0.5px; }
@@ -20,7 +20,6 @@
         .btn-login:hover { background: var(--brand-color); color: var(--primary); transform: translateY(-2px); }
         .trust-badge { display: inline-block; background: #f8f9fa; border: 1px solid #e9ecef; padding: 8px 15px; border-radius: 50px; font-size: 0.75rem; color: #6c757d; font-weight: 500; margin-top: 20px; }
 
-        /* UI WORKSPACE */
         .sidebar { height: 100vh; width: 260px; position: fixed; top: 0; left: 0; background: var(--primary); color: white; padding-top: 20px; z-index: 1050; }
         .sidebar-brand { font-size: 1.35rem; font-weight: 700; text-align: center; margin-bottom: 30px; color: var(--brand-color); }
         .nav-link { color: rgba(255, 255, 255, 0.7); padding: 12px 20px; margin: 4px 15px; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
@@ -28,7 +27,6 @@
         .nav-link i { margin-right: 10px; font-size: 1.1rem; }
         .badge-notif { position: absolute; right: 20px; background: #ef4444; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.7rem; }
 
-        /* SPESIAL STYLING DEAD LIST DI SIDEBAR */
         .nav-link.dead-list-item { color: #ef4444 !important; background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; font-weight: 600; margin-top: 20px; border-radius: 0 8px 8px 0; }
         .nav-link.dead-list-item:hover, .nav-link.dead-list-item.active { background: #ef4444 !important; color: white !important; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3); }
 
@@ -69,6 +67,7 @@
         <h6 class="mt-3 fw-bold text-dark" id="loading-text">Memuat Workspace...</h6>
     </div>
 
+    <!-- LOGIN SCREEN -->
     <div id="login-screen">
         <div class="login-box">
             <h2 class="brand-text"><i class="bi bi-layers-fill text-warning"></i> klikCRM <span class="text-warning">Pro</span></h2>
@@ -87,8 +86,10 @@
         </div>
     </div>
 
+    <!-- MAIN APP WRAPPER -->
     <div id="app-wrapper" style="display: none;">
         
+        <!-- SIDEBAR -->
         <nav class="sidebar">
             <div class="sidebar-brand"><i class="bi bi-layers-fill"></i> klikCRM Pro</div>
             <ul class="nav flex-column">
@@ -102,6 +103,7 @@
             <div class="position-absolute bottom-0 w-100 p-3"><button class="btn btn-danger w-100" onclick="logout()"><i class="bi bi-box-arrow-left"></i> Logout</button></div>
         </nav>
 
+        <!-- BOTTOM NAV (MOBILE) -->
         <nav class="bottom-nav">
             <div class="bottom-nav-link active" onclick="switchView('dashboard')"><i class="bi bi-grid-1x2-fill"></i><span>Utama</span></div>
             <div class="bottom-nav-link" onclick="switchView('leads')"><i class="bi bi-people-fill"></i><span>Kontak</span></div>
@@ -110,19 +112,33 @@
             <div class="bottom-nav-link" onclick="switchView('deadlist')"><i class="bi bi-skull text-danger"></i><span class="text-danger">Dead List</span></div>
         </nav>
 
+        <!-- MAIN CONTENT -->
         <div class="main-content">
             <div class="topbar">
                 <h4 class="mb-0 fw-bold" id="page-title">Dashboard Overview</h4>
                 <span class="badge bg-success" id="env-badge">Cloud Connected</span>
             </div>
 
+            <!-- DASHBOARD -->
             <div id="dashboard" class="app-view active">
+                
+                <!-- TELEGRAM BANNER (OPSIONAL) -->
+                <div class="alert alert-info border-0 shadow-sm rounded-4 d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+                    <div>
+                        <h6 class="fw-bold mb-1"><i class="bi bi-telegram text-primary"></i> Aktifkan Notifikasi Telegram (Opsional)</h6>
+                        <small>Dapatkan pengingat otomatis di HP Anda setiap pagi jika ada jadwal follow-up yang jatuh tempo.</small>
+                    </div>
+                    <!-- Link ini akan di-inject dinamis dari Javascript -->
+                    <a id="telegram-link" href="#" target="_blank" class="btn btn-primary rounded-pill"><i class="bi bi-link-45deg"></i> Hubungkan Telegram</a>
+                </div>
+
                 <div class="row g-4 mb-4">
                     <div class="col-6 col-md-3"><div class="stat-card"><div class="text-muted small fw-bold">TOTAL LEADS</div><div class="fs-3 fw-bold" id="dash-leads">0</div></div></div>
                     <div class="col-6 col-md-3"><div class="stat-card emerald"><div class="text-muted small fw-bold">WIN RATE</div><div class="fs-3 fw-bold text-success" id="dash-winrate">0%</div></div></div>
                     <div class="col-6 col-md-3"><div class="stat-card blue"><div class="text-muted small fw-bold">PIPELINE VALUE</div><div class="fs-4 fw-bold text-primary" id="dash-revenue">Rp 0</div></div></div>
                     <div class="col-6 col-md-3"><div class="stat-card red"><div class="text-muted small fw-bold">DEAD LEADS</div><div class="fs-3 fw-bold text-danger" id="dash-dead">0</div></div></div>
                 </div>
+
                 <div class="card border-0 shadow-sm rounded-4 mb-4 p-4 bg-light border-start border-4 border-warning d-none" id="reminder-box">
                     <h6 class="fw-bold text-warning"><i class="bi bi-bell-fill"></i> Pengingat Jadwal Follow Up!</h6>
                     <p class="mb-0 small text-muted">Ada <strong id="reminder-count">0</strong> prospek yang jadwal Follow Up-nya jatuh tempo hari ini. Cek menu Follow Up.</p>
@@ -130,6 +146,7 @@
                 <div class="card border-0 shadow-sm rounded-4 p-4"><h5 class="fw-bold mb-4">Sales Funnel</h5><div style="height: 300px;"><canvas id="funnelChart"></canvas></div></div>
             </div>
 
+            <!-- LEADS -->
             <div id="leads" class="app-view">
                 <div class="card border-0 shadow-sm rounded-4 p-4">
                     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
@@ -150,12 +167,13 @@
                 </div>
             </div>
 
+            <!-- FOLLOW UP -->
             <div id="followup" class="app-view">
                 <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
-                    <h5 class="fw-bold mb-3"><i class="bi bi-funnel"></i> Filter Data</h5>
+                    <h5 class="fw-bold mb-3"><i class="bi bi-funnel"></i> Filter Data Prioritas</h5>
                     <div class="row g-3">
                         <div class="col-md-4"><select class="form-select" id="filterProduct" onchange="renderUI()"><option value="ALL">Semua Produk</option></select></div>
-                        <div class="col-md-4"><select class="form-select" id="filterStatus" onchange="renderUI()"><option value="ALL">Semua Status (Kecuali Lost)</option><option value="Cold Lead">Cold Lead</option><option value="Warm Lead">Warm Lead</option><option value="Hot Lead">Hot Lead</option><option value="Loyal">Loyal Client</option><option value="TODAY">Jadwal Hari Ini</option></select></div>
+                        <div class="col-md-4"><select class="form-select" id="filterStatus" onchange="renderUI()"><option value="ALL">Semua Status (Kecuali Lost)</option><option value="Cold Lead">Cold Lead</option><option value="Warm Lead">Warm Lead</option><option value="Hot Lead">Hot Lead</option><option value="TODAY">Jadwal Hari Ini</option></select></div>
                     </div>
                 </div>
                 <div class="card border-0 shadow-sm rounded-4 p-0">
@@ -168,8 +186,17 @@
                 </div>
             </div>
 
-            <div id="pipeline" class="app-view"><div class="kanban-board" id="kanban-board"></div></div>
+            <!-- PIPELINE -->
+            <div id="pipeline" class="app-view">
+                <div class="mb-4 bg-white p-3 rounded-4 shadow-sm border-start border-4 border-info">
+                    <p class="text-muted small mb-1"><i class="bi bi-info-circle text-info"></i> Data ini diambil otomatis dari <strong>Master Contact Database</strong>.</p>
+                    <p class="text-muted small mb-2">Jika Anda mengubah status menjadi <strong>Won</strong>, data akan muncul di menu <strong>Project</strong>. Jika <strong>Lost</strong>, akan terarsip di menu <strong>Dead List</strong>.</p>
+                    <p class="small mb-0" style="color: #ef4444; font-weight: bold;"><i class="bi bi-exclamation-triangle-fill"></i> Jika Anda menggeser data menggunakan HP, sentuh dan tahan dulu kartu selama 1 detik baru digeser.</p>
+                </div>
+                <div class="kanban-board" id="kanban-board"></div>
+            </div>
             
+            <!-- PROJECTS -->
             <div id="projects" class="app-view">
                 <div class="card border-0 shadow-sm rounded-4 p-4">
                     <h5 class="fw-bold mb-4">Project Management (Won Deals)</h5>
@@ -182,6 +209,7 @@
                 </div>
             </div>
 
+            <!-- DEAD LIST -->
             <div id="deadlist" class="app-view">
                 <div class="alert alert-danger rounded-4"><i class="bi bi-info-circle-fill"></i> <strong>Arsip Dead List:</strong> Daftar prospek dengan status LOST atau sudah difollow up 5x tanpa hasil positif.</div>
                 <div class="card border-0 shadow-sm rounded-4 p-4"><table class="table align-middle"><thead class="table-light"><tr><th>Perusahaan & Kontak</th><th>Produk Diminati</th><th>Total Follow Up</th><th>Aksi</th></tr></thead><tbody id="dead-table-body"></tbody></table></div>
@@ -189,6 +217,7 @@
         </div>
     </div>
 
+    <!-- MODALS -->
     <div class="modal fade" id="leadModal" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content border-0"><div class="modal-header bg-dark text-white"><h5 class="modal-title text-warning">Form Database Lead</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
             <div class="modal-body p-4"><form id="leadForm"><input type="hidden" id="leadId"><input type="hidden" id="followUpCount" value="0"><input type="hidden" id="lastFollowUp" value="-"><input type="hidden" id="nextFollowUp" value="-">
@@ -201,13 +230,14 @@
         <div class="modal-dialog modal-dialog-centered"><div class="modal-content border-0 shadow"><div class="modal-header bg-primary text-white"><h5 class="modal-title"><i class="bi bi-headset"></i> Log Aktivitas Follow Up</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
             <div class="modal-body p-4"><form id="logForm"><input type="hidden" id="logLeadId">
                 <div class="mb-3"><h5 id="logCompanyName" class="fw-bold text-primary"></h5></div>
-                <div class="mb-3"><label class="text-muted small">Update Status</label><select class="form-select" id="logNewStatus"><option value="Cold Lead">Tetap Cold Lead</option><option value="Warm Lead">Naik ke Warm Lead</option><option value="Hot Lead">Naik ke Hot Lead</option><option value="Proposal">Proposal / Nego</option><option value="Lost">Lost (Menyerah)</option></select></div>
+                <div class="mb-3"><label class="text-muted small">Update Status</label><select class="form-select" id="logNewStatus"><option value="Cold Lead">Tetap Cold Lead</option><option value="Warm Lead">Naik ke Warm Lead</option><option value="Hot Lead">Naik ke Hot Lead</option><option value="Proposal">Proposal / Nego</option><option value="Won">Won (Deal)</option><option value="Lost">Lost (Menyerah)</option></select></div>
                 <div class="mb-3"><label>Catatan Interaksi</label><textarea class="form-control" id="logNotes" rows="2" required></textarea></div>
                 <div class="mb-3"><label class="text-primary fw-bold"><i class="bi bi-calendar-event"></i> Jadwal Berikutnya</label><input type="date" class="form-control border-primary" id="logNextFollowUp"></div>
             </form></div><div class="modal-footer"><button type="button" class="btn btn-primary w-100" onclick="saveLogFollowUp()">Simpan Aktivitas</button></div>
         </div></div>
     </div>
 
+    <!-- JS EXTERNAL -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -216,7 +246,10 @@
     <script>
         // =========================================================================
         // PENTING: MASUKKAN URL WEB APP DARI klikCRM_Core_Engine ANDA DI SINI!
-        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw6y123Ydx07cmt0hQIRJqVl-Zmtu_lcgL0vj9UwWDqzPuUYJrHxaBC7I1X9Zr900A5Iw/exec"; 
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxGj6rncM_DJRLnYe59kkOxv4DfVM7qugcXDW51D2aLY_fB4PGt-EgqntYsfgdFosQ/exec"; 
+        
+        // PENTING: GANTI NAMA BOT TELEGRAM ANDA DI SINI (Tanpa @)
+        const BOT_USERNAME = "CRMku_bot"; 
         // =========================================================================
 
         window.addEventListener('unhandledrejection', function(event) { alert("Sistem Error: " + event.reason.message); });
@@ -278,17 +311,15 @@
                         let today = new Date().toISOString().split('T')[0];
                         if (actionName === "getAllData") {
                             resolve({
-                                leads: [{ id: "LD-001", company: "PT Simulasi Cuan", pic: "Budi", phone: "0812", status: "Warm Lead", product: "ERP", value: 25000000, followUpCount: 2, nextFollowUp: today }],
-                                pipeline: [{ id: "LD-001", company: "PT Simulasi Cuan", value: 25000000, stage: "Won" }], followup: [], projects: []
+                                leads: [{ id: "LD-001", company: "PT Simulasi B2B", pic: "Budi", phone: "0812", status: "Warm Lead", product: "ERP", value: 25000000, followUpCount: 2, nextFollowUp: today }],
+                                pipeline: [{ id: "LD-001", company: "PT Simulasi B2B", value: 25000000, stage: "Need Analysis" }], followup: [], projects: []
                             });
                         } else if (actionName === "saveLead") { db.leads.push(payloadData); resolve(db); } else { resolve(db); } 
                     }, 500);
                 });
             }
 
-            // Membungkus payload agar huruf besarnya sesuai yg diharapkan Spreadsheet
             let safePayload = formatDataToBackend(payloadData);
-
             const response = await fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify({ action: actionName, dbId: currentDbId, data: safePayload }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
             const textResult = await response.text();
             let result;
@@ -296,7 +327,7 @@
             if (result.status === "error") throw new Error(result.message);
             
             let rawData = typeof result.data === 'string' ? JSON.parse(result.data) : result.data;
-            return normalizeReceivedData(rawData); // Menormalkan huruf dari Spreadsheet
+            return normalizeReceivedData(rawData); 
         }
 
         async function manualLogin() {
@@ -310,6 +341,10 @@
             try {
                 db = await apiCall("getAllData"); 
                 try { localStorage.setItem('klikcrm_license_key', currentDbId); } catch(e){}
+                
+                // SETUP LINK TELEGRAM
+                document.getElementById('telegram-link').href = `https://t.me/${BOT_USERNAME}?start=${currentDbId}`;
+
                 document.getElementById('login-screen').style.opacity = '0';
                 setTimeout(() => {
                     document.getElementById('login-screen').style.display = 'none';
@@ -345,18 +380,16 @@
             window.open(`https://wa.me/${num}?text=${text}`, '_blank');
         }
 
-        // FUNGSI PEMBERI WARNA STATUS
         function getStatusColor(status) {
             if(status === 'Hot Lead') return 'bg-danger';
             if(status === 'Warm Lead') return 'bg-warning text-dark';
             if(status === 'Proposal') return 'bg-primary';
             if(status === 'Loyal' || status === 'Won') return 'bg-success';
             if(status === 'Lost') return 'bg-dark';
-            return 'bg-secondary'; // Default Cold Lead
+            return 'bg-secondary'; 
         }
 
         function renderUI() {
-            // Update Filter
             const elProd = document.getElementById('filterProduct');
             if(elProd) {
                 const uniqueProds = [...new Set(db.leads.filter(l => l.product).map(l => String(l.product).trim()))];
@@ -366,18 +399,33 @@
             }
 
             let today = new Date().toISOString().split('T')[0];
-            let activeLeads = db.leads.filter(l => l.status !== "Lost");
-            let deadLeads = db.leads.filter(l => l.status === "Lost" || (l.followUpCount >= 5 && l.status !== 'Won' && l.status !== 'Loyal'));
+            let activeLeads = [];
+            let deadLeads = [];
+            let dueLeadsCount = 0;
 
-            let dueCount = activeLeads.filter(l => l.nextFollowUp === today && l.status !== "Won" && l.status !== "Loyal").length;
-            if (dueCount > 0) {
-                document.getElementById('notif-badge').innerText = dueCount; document.getElementById('notif-badge').classList.remove('d-none');
-                document.getElementById('reminder-box').classList.remove('d-none'); document.getElementById('reminder-count').innerText = dueCount;
+            db.leads.forEach(l => {
+                l._safeStatus = l.status || "Cold Lead";
+                l._safeNextFu = l.nextfollowup || l.nextFollowUp || "-";
+                l._safeFuCount = parseInt(l.followupcount || l.followUpCount) || 0;
+
+                if (l._safeNextFu === today && l._safeStatus !== "Lost" && l._safeStatus !== "Won" && l._safeStatus !== "Loyal") {
+                    dueLeadsCount++;
+                }
+
+                if (l._safeStatus === "Lost" || (l._safeFuCount >= 5 && l._safeStatus !== 'Won' && l._safeStatus !== 'Loyal' && l._safeStatus !== 'Hot Lead')) {
+                    deadLeads.push(l);
+                } else {
+                    activeLeads.push(l);
+                }
+            });
+
+            if (dueLeadsCount > 0) {
+                document.getElementById('notif-badge').innerText = dueLeadsCount; document.getElementById('notif-badge').classList.remove('d-none');
+                document.getElementById('reminder-box').classList.remove('d-none'); document.getElementById('reminder-count').innerText = dueLeadsCount;
             } else {
                 document.getElementById('notif-badge').classList.add('d-none'); document.getElementById('reminder-box').classList.add('d-none');
             }
 
-            // Dashboard
             document.getElementById('dash-leads').innerText = activeLeads.length;
             document.getElementById('dash-revenue').innerText = formatRupiah(db.pipeline.reduce((sum, item) => sum + Number(item.value || 0), 0));
             document.getElementById('dash-dead').innerText = deadLeads.length;
@@ -386,29 +434,27 @@
             if(funnelChartInstance) funnelChartInstance.destroy();
             funnelChartInstance = new Chart(ctx, { type: 'bar', data: { labels: STAGES, datasets: [{ data: STAGES.map(s => db.pipeline.filter(p => p.stage === s).length), backgroundColor: ['#94a3b8', '#60a5fa', '#3b82f6', '#8b5cf6', '#f59e0b', '#10b981', '#ef4444'], borderRadius: 6 }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
 
-            // Master Leads Table
             const tbLeads = document.getElementById('leads-table-body'); tbLeads.innerHTML = '';
             db.leads.forEach(l => {
-                let badgeColor = getStatusColor(l.status);
-                tbLeads.innerHTML += `<tr><td><b class="text-dark">${l.company}</b><br><small class="text-muted fw-bold">${l.id}</small></td><td>${l.pic}<br><small><i class="bi bi-whatsapp text-success"></i> ${l.phone}</small></td><td><span class="badge ${badgeColor}">${l.status || 'Cold Lead'}</span></td><td><b class="text-primary">${l.product}</b><br><small>${formatRupiah(l.value)}</small></td><td><button class="btn btn-sm btn-light" onclick="editLead('${l.id}')"><i class="bi bi-pencil-square"></i></button> <button class="btn btn-sm btn-light text-danger" onclick="deleteLead('${l.id}')"><i class="bi bi-trash"></i></button></td></tr>`;
+                let badgeColor = getStatusColor(l._safeStatus);
+                tbLeads.innerHTML += `<tr><td><b class="text-dark">${l.company}</b><br><small class="text-muted fw-bold">${l.id}</small></td><td>${l.pic}<br><small><i class="bi bi-whatsapp text-success"></i> ${l.phone}</small></td><td><span class="badge ${badgeColor}">${l._safeStatus}</span></td><td><b class="text-primary">${l.product}</b><br><small>${formatRupiah(l.value)}</small></td><td><button class="btn btn-sm btn-light" onclick="editLead('${l.id}')"><i class="bi bi-pencil-square"></i></button> <button class="btn btn-sm btn-light text-danger" onclick="deleteLead('${l.id}')"><i class="bi bi-trash"></i></button></td></tr>`;
             });
 
-            // Follow Up Table
             const tbFu = document.getElementById('followup-table-body'); tbFu.innerHTML = '';
             const fProd = document.getElementById('filterProduct').value; const fStat = document.getElementById('filterStatus').value;
             
-            let fuList = activeLeads.filter(l => l.status !== 'Loyal' && l.status !== 'Won');
-            if(fStat === 'TODAY') fuList = fuList.filter(l => l.nextFollowUp === today); else if(fStat !== 'ALL') fuList = fuList.filter(l => l.status === fStat);
+            let fuList = activeLeads.filter(l => l._safeStatus !== 'Loyal' && l._safeStatus !== 'Won');
+            if(fStat === 'TODAY') fuList = fuList.filter(l => l._safeNextFu === today); else if(fStat !== 'ALL') fuList = fuList.filter(l => l._safeStatus === fStat);
             if(fProd !== 'ALL') fuList = fuList.filter(l => l.product === fProd);
 
             fuList.forEach(l => {
-                let badgeColor = getStatusColor(l.status);
-                let progressCount = parseInt(l.followUpCount) || 0;
-                let isDueBadge = (l.nextFollowUp === today) ? `<span class="badge bg-warning text-dark shadow-sm"><i class="bi bi-alarm"></i> Hari Ini</span>` : (l.nextFollowUp || '-');
+                let badgeColor = getStatusColor(l._safeStatus);
+                let progressCount = parseInt(l._safeFuCount) || 0;
+                let isDueBadge = (l._safeNextFu === today) ? `<span class="badge bg-warning text-dark shadow-sm"><i class="bi bi-alarm"></i> Hari Ini</span>` : (l._safeNextFu || '-');
                 
                 tbFu.innerHTML += `<tr>
                     <td class="ps-4 fw-bold">${l.company}<br><small class="text-muted fw-normal">${l.pic}</small></td>
-                    <td><span class="badge ${badgeColor} mb-1">${l.status || 'Cold Lead'}</span><br><div class="progress" style="height:5px; width:100px;"><div class="progress-bar bg-success" style="width:${(progressCount/5)*100}%"></div></div><small style="font-size:0.65rem">${progressCount}x Dihubungi</small></td>
+                    <td><span class="badge ${badgeColor} mb-1">${l._safeStatus}</span><br><div class="progress" style="height:5px; width:100px;"><div class="progress-bar bg-success" style="width:${(progressCount/5)*100}%"></div></div><small style="font-size:0.65rem">${progressCount}x Dihubungi</small></td>
                     <td class="small fw-bold text-primary">${isDueBadge}</td>
                     <td class="pe-4 text-end">
                         <button class="btn btn-sm btn-success rounded-pill me-1" onclick="openWA('${l.phone}', '${l.company}')"><i class="bi bi-whatsapp"></i> Chat</button>
@@ -417,10 +463,9 @@
                 </tr>`;
             });
 
-            // Dead List Table
             const tbDead = document.getElementById('dead-table-body'); tbDead.innerHTML = '';
             deadLeads.forEach(l => { 
-                tbDead.innerHTML += `<tr><td class="fw-bold">${l.company}<br><small><i class="bi bi-whatsapp text-success"></i> ${l.phone}</small></td><td>${l.product}</td><td><span class="badge bg-dark">${l.followUpCount || 5}x Follow Up</span></td><td><button class="btn btn-sm btn-danger" onclick="deleteLead('${l.id}')"><i class="bi bi-trash"></i> Hapus Permanen</button></td></tr>`; 
+                tbDead.innerHTML += `<tr><td class="fw-bold">${l.company}<br><small><i class="bi bi-whatsapp text-success"></i> ${l.phone}</small></td><td>${l.product}</td><td><span class="badge bg-dark">${l._safeFuCount}x Follow Up</span></td><td><button class="btn btn-sm btn-danger" onclick="deleteLead('${l.id}')"><i class="bi bi-trash"></i> Hapus Permanen</button></td></tr>`; 
             });
 
             renderProjectsTable();
@@ -451,20 +496,41 @@
             const board = document.getElementById('kanban-board'); board.innerHTML = '';
             STAGES.forEach(stage => {
                 const items = db.pipeline.filter(p => p.stage === stage);
-                board.innerHTML += `<div class="kanban-column"><div class="kanban-header"><span>${stage}</span><span class="badge bg-secondary">${items.length}</span></div><div class="kanban-body" id="kan-${stage.replace(/\s/g,'')}">${items.map(i => `<div class="kanban-card" data-id="${i.id}"><b>${i.company}</b><br><small class="text-success">${formatRupiah(i.value)}</small></div>`).join('')}</div></div>`;
+                board.innerHTML += `<div class="kanban-column"><div class="kanban-header"><span>${stage}</span><span class="badge bg-secondary">${items.length}</span></div><div class="kanban-body" data-stage="${stage}" id="kan-${stage.replace(/\s/g,'')}">${items.map(i => `<div class="kanban-card" data-id="${i.id}"><b>${i.company}</b><br><small class="text-success">${formatRupiah(i.value)}</small></div>`).join('')}</div></div>`;
             });
             STAGES.forEach(stage => {
                 const el = document.getElementById(`kan-${stage.replace(/\s/g,'')}`);
                 if(el) {
-                    new Sortable(el, { group: 'pipe', animation: 150, onEnd: async function(evt) {
-                        const id = evt.item.getAttribute('data-id'); const newStage = evt.to.parentElement.id.replace('kan-', '');
-                        let idx = db.pipeline.findIndex(p => p.id === id);
-                        if(idx > -1 && db.pipeline[idx].stage !== newStage) { 
-                            db.pipeline[idx].stage = newStage; 
-                            renderUI(); 
-                            if(!isSimulation) await apiCall("savePipeline", db.pipeline[idx]); 
+                    new Sortable(el, { 
+                        group: 'pipe', animation: 150, delay: 500, delayOnTouchOnly: true,
+                        onEnd: async function(evt) {
+                            const id = evt.item.getAttribute('data-id'); const newStage = evt.to.getAttribute('data-stage'); 
+                            let idx = db.pipeline.findIndex(p => p.id === id);
+                            
+                            if(idx > -1 && db.pipeline[idx].stage !== newStage) { 
+                                db.pipeline[idx].stage = newStage; 
+                                
+                                // AUTO SYNC STATUS KE MASTER LEAD
+                                let leadIdx = db.leads.findIndex(l => l.id === id);
+                                if(leadIdx > -1) {
+                                    if(newStage === 'Won') db.leads[leadIdx].status = 'Won';
+                                    if(newStage === 'Lost') db.leads[leadIdx].status = 'Lost';
+                                }
+
+                                renderUI(); 
+
+                                if(!isSimulation) {
+                                    startLoading("Menyinkronkan Pipeline...");
+                                    try {
+                                        await apiCall("savePipeline", db.pipeline[idx]); 
+                                        if(newStage === 'Won' || newStage === 'Lost') {
+                                            await apiCall("saveLead", db.leads[leadIdx]);
+                                        }
+                                    } catch(e) {} finally { endLoading(); }
+                                } 
+                            }
                         }
-                    }});
+                    });
                 }
             });
         }
@@ -476,9 +542,9 @@
             if(l) { 
                 ['company','pic','phone','product','value','source','status'].forEach(k => { if(document.getElementById(k)) document.getElementById(k).value = l[k]||''; }); 
                 document.getElementById('leadId').value = l.id;
-                document.getElementById('followUpCount').value = l.followUpCount || 0;
-                document.getElementById('lastFollowUp').value = l.lastFollowUp || "-";
-                document.getElementById('nextFollowUp').value = l.nextFollowUp || "-";
+                document.getElementById('followUpCount').value = l.followUpCount || l.followupcount || 0;
+                document.getElementById('lastFollowUp').value = l.lastFollowUp || l.lastfollowup || "-";
+                document.getElementById('nextFollowUp').value = l.nextFollowUp || l.nextfollowup || "-";
                 leadModalInstance.show(); 
             } 
         }
@@ -509,7 +575,7 @@
             const id = document.getElementById('logLeadId').value; 
             let l = db.leads.find(x => x.id === id);
             
-            l.followUpCount = (parseInt(l.followUpCount) || 0) + 1; 
+            l.followUpCount = (parseInt(l.followupcount || l.followUpCount) || 0) + 1; 
             l.lastFollowUp = new Date().toISOString().split('T')[0];
             l.status = document.getElementById('logNewStatus').value; 
             l.nextFollowUp = document.getElementById('logNextFollowUp').value || "-";
