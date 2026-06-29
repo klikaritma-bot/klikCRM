@@ -14,20 +14,21 @@
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: #1f2937; overflow-x: hidden; }
 
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at top right, #112240, var(--primary)); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2000; transition: opacity 0.5s; }
-        .login-box { background: rgba(255, 255, 255, 0.98); padding: 45px 40px; border-radius: 20px; width: 100%; max-width: 420px; box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(255, 184, 0, 0.05); text-align: center; }
+        .login-box { background: rgba(255, 255, 255, 0.98); padding: 45px 40px; border-radius: 20px; width: 100%; max-width: 420px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); text-align: center; }
         .brand-text { color: var(--primary); font-weight: 800; font-size: 2rem; letter-spacing: -0.5px; }
         .btn-login { background: var(--primary); color: white; font-weight: 600; border: none; }
         .btn-login:hover { background: var(--brand-color); color: var(--primary); transform: translateY(-2px); }
         .trust-badge { display: inline-block; background: #f8f9fa; border: 1px solid #e9ecef; padding: 8px 15px; border-radius: 50px; font-size: 0.75rem; color: #6c757d; font-weight: 500; margin-top: 20px; }
 
-        .sidebar { height: 100vh; width: 260px; position: fixed; top: 0; left: 0; background: var(--primary); color: white; padding-top: 20px; z-index: 1050; }
+        /* SIDEBAR FLEX COLUMN UNTUK FOOTER PROMO */
+        .sidebar { height: 100vh; width: 260px; position: fixed; top: 0; left: 0; background: var(--primary); color: white; padding-top: 20px; z-index: 1050; display: flex; flex-direction: column; overflow-y: auto;}
         .sidebar-brand { font-size: 1.35rem; font-weight: 700; text-align: center; margin-bottom: 30px; color: var(--brand-color); }
         .nav-link { color: rgba(255, 255, 255, 0.7); padding: 12px 20px; margin: 4px 15px; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
         .nav-link:hover, .nav-link.active { color: var(--primary); background: var(--brand-color); font-weight: 600; }
         .nav-link i { margin-right: 10px; font-size: 1.1rem; }
         .badge-notif { position: absolute; right: 20px; background: #ef4444; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.7rem; }
 
-        .nav-link.dead-list-item { color: #ef4444 !important; background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; font-weight: 600; margin-top: 20px; border-radius: 0 8px 8px 0; }
+        .nav-link.dead-list-item { color: #ef4444 !important; background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; font-weight: 600; margin-top: 5px; border-radius: 0 8px 8px 0; }
         .nav-link.dead-list-item:hover, .nav-link.dead-list-item.active { background: #ef4444 !important; color: white !important; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3); }
 
         .main-content { margin-left: 260px; padding: 30px; min-height: 100vh; }
@@ -57,7 +58,10 @@
             .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; right: 0; background: white; box-shadow: 0 -4px 20px rgba(0,0,0,0.08); z-index: 1040; justify-content: space-around; align-items: center; padding: 12px 5px; border-radius: 20px 20px 0 0; }
             .bottom-nav-link { display: flex; flex-direction: column; align-items: center; color: #94a3b8; font-size: 0.65rem; font-weight: 600; width: 20%; cursor: pointer; text-decoration: none;}
             .bottom-nav-link.active { color: var(--secondary); }
+            /* Menyembunyikan elemen promo mobile saat berada di halaman selain dashboard agar lebih rapi */
+            .promo-mobile { display: block; }
         }
+        @media (min-width: 769px) { .promo-mobile { display: none; } }
     </style>
 </head>
 <body>
@@ -89,10 +93,10 @@
     <!-- MAIN APP WRAPPER -->
     <div id="app-wrapper" style="display: none;">
         
-        <!-- SIDEBAR -->
+        <!-- SIDEBAR DESKTOP -->
         <nav class="sidebar">
             <div class="sidebar-brand"><i class="bi bi-layers-fill"></i> klikCRM Pro</div>
-            <ul class="nav flex-column">
+            <ul class="nav flex-column mb-auto">
                 <li class="nav-item"><a class="nav-link active" onclick="switchView('dashboard')"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
                 <li class="nav-item"><a class="nav-link" onclick="switchView('leads')"><i class="bi bi-people-fill"></i> Master Contact</a></li>
                 <li class="nav-item"><a class="nav-link position-relative" onclick="switchView('followup')"><i class="bi bi-telephone-outbound-fill"></i> Follow Up <span id="notif-badge" class="badge-notif d-none">0</span></a></li>
@@ -100,7 +104,15 @@
                 <li class="nav-item"><a class="nav-link" onclick="switchView('projects')"><i class="bi bi-briefcase-fill"></i> Projects</a></li>
                 <li class="nav-item"><a class="nav-link dead-list-item" onclick="switchView('deadlist')"><i class="bi bi-skull-fill"></i> Dead List</a></li>
             </ul>
-            <div class="position-absolute bottom-0 w-100 p-3"><button class="btn btn-danger w-100" onclick="logout()"><i class="bi bi-box-arrow-left"></i> Logout</button></div>
+            
+            <!-- PROMO DESKTOP (SIDEBAR BAWAH) -->
+            <div class="mt-auto p-3 text-center" style="font-size:0.75rem; color:rgba(255,255,255,0.6);">
+                <button class="btn btn-danger btn-sm w-100 mb-3 rounded-3" onclick="logout()"><i class="bi bi-box-arrow-left"></i> Logout Akses</button>
+                <hr class="border-secondary mt-0">
+                <p class="mb-2">&copy; 2026 <strong class="text-warning">klikSistem.com</strong></p>
+                <p class="mb-2">Scale-up bisnis Anda dengan sistem digital yang tepat! Kami siap merancang sistem custom khusus untuk kebutuhan unik perusahaan Anda.</p>
+                <a href="https://wa.me/6281328307335" target="_blank" class="btn btn-sm btn-success w-100 rounded-pill fw-bold"><i class="bi bi-whatsapp"></i> Hubungi Developer</a>
+            </div>
         </nav>
 
         <!-- BOTTOM NAV (MOBILE) -->
@@ -109,26 +121,30 @@
             <div class="bottom-nav-link" onclick="switchView('leads')"><i class="bi bi-people-fill"></i><span>Kontak</span></div>
             <div class="bottom-nav-link" onclick="switchView('followup')"><i class="bi bi-telephone-outbound-fill"></i><span>Aktivitas</span></div>
             <div class="bottom-nav-link" onclick="switchView('pipeline')"><i class="bi bi-kanban"></i><span>Pipeline</span></div>
-            <div class="bottom-nav-link" onclick="switchView('deadlist')"><i class="bi bi-skull text-danger"></i><span class="text-danger">Dead List</span></div>
+            <!-- MENU DEADLIST DIGANTI PROJECT -->
+            <div class="bottom-nav-link" onclick="switchView('projects')"><i class="bi bi-briefcase-fill text-primary"></i><span class="text-primary fw-bold">Project</span></div>
         </nav>
 
         <!-- MAIN CONTENT -->
         <div class="main-content">
             <div class="topbar">
                 <h4 class="mb-0 fw-bold" id="page-title">Dashboard Overview</h4>
-                <span class="badge bg-success" id="env-badge">Cloud Connected</span>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-success" id="env-badge">Cloud Connected</span>
+                    <!-- Tombol logout untuk layar HP karena sidebar hilang -->
+                    <button class="btn btn-sm btn-outline-danger d-md-none" onclick="logout()"><i class="bi bi-box-arrow-right"></i></button>
+                </div>
             </div>
 
             <!-- DASHBOARD -->
             <div id="dashboard" class="app-view active">
                 
-                <!-- TELEGRAM BANNER (OPSIONAL) -->
+                <!-- TELEGRAM BANNER -->
                 <div class="alert alert-info border-0 shadow-sm rounded-4 d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
                     <div>
                         <h6 class="fw-bold mb-1"><i class="bi bi-telegram text-primary"></i> Aktifkan Notifikasi Telegram (Opsional)</h6>
                         <small>Dapatkan pengingat otomatis di HP Anda setiap pagi jika ada jadwal follow-up yang jatuh tempo.</small>
                     </div>
-                    <!-- Link ini akan di-inject dinamis dari Javascript -->
                     <a id="telegram-link" href="#" target="_blank" class="btn btn-primary rounded-pill"><i class="bi bi-link-45deg"></i> Hubungkan Telegram</a>
                 </div>
 
@@ -143,7 +159,34 @@
                     <h6 class="fw-bold text-warning"><i class="bi bi-bell-fill"></i> Pengingat Jadwal Follow Up!</h6>
                     <p class="mb-0 small text-muted">Ada <strong id="reminder-count">0</strong> prospek yang jadwal Follow Up-nya jatuh tempo hari ini. Cek menu Follow Up.</p>
                 </div>
-                <div class="card border-0 shadow-sm rounded-4 p-4"><h5 class="fw-bold mb-4">Sales Funnel</h5><div style="height: 300px;"><canvas id="funnelChart"></canvas></div></div>
+
+                <div class="row g-4">
+                    <!-- GRAFIK FUNNEL -->
+                    <div class="col-lg-8">
+                        <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                            <h5 class="fw-bold mb-4">Sales Funnel</h5>
+                            <div style="height: 300px;"><canvas id="funnelChart"></canvas></div>
+                        </div>
+                    </div>
+                    
+                    <!-- WIDGET DEAD LIST -->
+                    <div class="col-lg-4">
+                        <div class="card border-0 shadow-sm rounded-4 p-4 h-100 border-start border-4 border-danger bg-light">
+                            <h5 class="fw-bold text-danger mb-3"><i class="bi bi-skull-fill"></i> 3 Dead Leads Terbaru</h5>
+                            <div id="dash-dead-list-widget">
+                                <!-- Data inject dari JS -->
+                            </div>
+                            <button class="btn btn-outline-danger w-100 mt-auto pt-2" onclick="switchView('deadlist')">Lihat Semua Data Lost</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROMO MOBILE DI BAWAH DASHBOARD -->
+                <div class="promo-mobile mt-5 p-4 bg-white rounded-4 shadow-sm text-center">
+                    <p class="mb-2 small">&copy; 2026 <strong class="text-warning">klikSistem.com</strong></p>
+                    <p class="mb-3 small text-muted">Scale-up bisnis Anda dengan sistem digital yang tepat! Kami siap merancang sistem custom khusus untuk kebutuhan unik perusahaan Anda.</p>
+                    <a href="https://wa.me/6281328307335" target="_blank" class="btn btn-success rounded-pill fw-bold"><i class="bi bi-whatsapp"></i> Hubungi Developer</a>
+                </div>
             </div>
 
             <!-- LEADS -->
@@ -189,9 +232,7 @@
             <!-- PIPELINE -->
             <div id="pipeline" class="app-view">
                 <div class="mb-4 bg-white p-3 rounded-4 shadow-sm border-start border-4 border-info">
-                    <p class="text-muted small mb-1"><i class="bi bi-info-circle text-info"></i> Data ini diambil otomatis dari <strong>Master Contact Database</strong>.</p>
-                    <p class="text-muted small mb-2">Jika Anda mengubah status menjadi <strong>Won</strong>, data akan muncul di menu <strong>Project</strong>. Jika <strong>Lost</strong>, akan terarsip di menu <strong>Dead List</strong>.</p>
-                    <p class="small mb-0" style="color: #ef4444; font-weight: bold;"><i class="bi bi-exclamation-triangle-fill"></i> Jika Anda menggeser data menggunakan HP, sentuh dan tahan dulu kartu selama 1 detik baru digeser.</p>
+                    <p class="text-muted small mb-1"><i class="bi bi-info-circle text-info"></i> Data otomatis diambil dari Master Contact. Anda dapat <strong>menggeser kartu (Drag)</strong> ATAU menekan tombol <strong>titik tiga (⋮)</strong> di sudut kartu untuk memindahkan data dengan aman di layar HP.</p>
                 </div>
                 <div class="kanban-board" id="kanban-board"></div>
             </div>
@@ -202,7 +243,7 @@
                     <h5 class="fw-bold mb-4">Project Management (Won Deals)</h5>
                     <div class="table-responsive">
                         <table class="table align-middle">
-                            <thead class="table-light"><tr><th>ID Project</th><th>Perusahaan & Produk</th><th>Status Project</th></tr></thead>
+                            <thead class="table-light"><tr><th>ID Project</th><th>Perusahaan & Produk</th><th>Status Project</th><th class="text-end">Aksi</th></tr></thead>
                             <tbody id="projects-table-body"></tbody>
                         </table>
                     </div>
@@ -211,13 +252,13 @@
 
             <!-- DEAD LIST -->
             <div id="deadlist" class="app-view">
-                <div class="alert alert-danger rounded-4"><i class="bi bi-info-circle-fill"></i> <strong>Arsip Dead List:</strong> Daftar prospek dengan status LOST atau sudah difollow up 5x tanpa hasil positif.</div>
+                <div class="alert alert-danger rounded-4"><i class="bi bi-info-circle-fill"></i> <strong>Arsip Keseluruhan Data Lost:</strong> Daftar prospek dengan status LOST atau sudah difollow up 5x tanpa hasil positif.</div>
                 <div class="card border-0 shadow-sm rounded-4 p-4"><table class="table align-middle"><thead class="table-light"><tr><th>Perusahaan & Kontak</th><th>Produk Diminati</th><th>Total Follow Up</th><th>Aksi</th></tr></thead><tbody id="dead-table-body"></tbody></table></div>
             </div>
         </div>
     </div>
 
-    <!-- MODALS -->
+    <!-- MODALS FORM -->
     <div class="modal fade" id="leadModal" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content border-0"><div class="modal-header bg-dark text-white"><h5 class="modal-title text-warning">Form Database Lead</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
             <div class="modal-body p-4"><form id="leadForm"><input type="hidden" id="leadId"><input type="hidden" id="followUpCount" value="0"><input type="hidden" id="lastFollowUp" value="-"><input type="hidden" id="nextFollowUp" value="-">
@@ -245,10 +286,7 @@
 
     <script>
         // =========================================================================
-        // PENTING: MASUKKAN URL WEB APP DARI klikCRM_Core_Engine ANDA DI SINI!
-        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxRj3M0hzovv5a7rPuTaNS7pHO-e5kDd5ei8V93LLhspd7WFia9k4FjcJ3frZFOsgHU/exec"; 
-        
-        // PENTING: GANTI NAMA BOT TELEGRAM ANDA DI SINI (Tanpa @)
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyXxQo-HLqNhCPdZruQPcfE7dWnSUfggjUpZcHMEHMcWK9_d8KVIqDImAehT0F1ZhsGQw/exec"; 
         const BOT_USERNAME = "klikCRM_notif_bot"; 
         // =========================================================================
 
@@ -263,10 +301,10 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             try { leadModalInstance = new bootstrap.Modal(document.getElementById('leadModal')); logModalInstance = new bootstrap.Modal(document.getElementById('logModal')); } catch(e) {}
-            if (currentDbId) { document.getElementById('licenseKey').value = currentDbId; executeLogin(currentDbId); }
+            if (currentDbId) { document.getElementById('licenseKey').value = currentDbId; loadData(currentDbId); }
         });
 
-        // --- PENERJEMAH DATA DARI DAN KE SPREADSHEET (MENGATASI BUG UNDEFINED) ---
+        // --- PENERJEMAH DATA DARI DAN KE SPREADSHEET ---
         function formatDataToBackend(payloadData) {
             if (!payloadData || typeof payloadData !== 'object' || Array.isArray(payloadData)) return payloadData;
             let formatted = {};
@@ -311,8 +349,15 @@
                         let today = new Date().toISOString().split('T')[0];
                         if (actionName === "getAllData") {
                             resolve({
-                                leads: [{ id: "LD-001", company: "PT Simulasi B2B", pic: "Budi", phone: "0812", status: "Warm Lead", product: "ERP", value: 25000000, followUpCount: 2, nextFollowUp: today }],
-                                pipeline: [{ id: "LD-001", company: "PT Simulasi B2B", value: 25000000, stage: "Need Analysis" }], followup: [], projects: []
+                                leads: [
+                                    { id: "LD-001", company: "PT Simulasi B2B", pic: "Budi", phone: "0812", status: "Warm Lead", product: "ERP", value: 25000000, followUpCount: 2, nextFollowUp: today },
+                                    { id: "LD-002", company: "Toko Abadi", pic: "Siti", phone: "0813", status: "Lost", product: "Custom", value: 5000000, followUpCount: 5, nextFollowUp: "-" },
+                                    { id: "LD-003", company: "CV Maju Jaya", pic: "Andi", phone: "0814", status: "Won", product: "ERP", value: 45000000, followUpCount: 3, nextFollowUp: "-" }
+                                ],
+                                pipeline: [
+                                    { id: "LD-001", company: "PT Simulasi B2B", value: 25000000, stage: "Need Analysis" },
+                                    { id: "LD-003", company: "CV Maju Jaya", value: 45000000, stage: "Won" }
+                                ], followup: [], projects: [{ id: "PRJ-991", leadId: "LD-003", product: "ERP", pm: "-", status: "Planning", progress: 0 }]
                             });
                         } else if (actionName === "saveLead") { db.leads.push(payloadData); resolve(db); } else { resolve(db); } 
                     }, 500);
@@ -333,29 +378,43 @@
         async function manualLogin() {
             const inputId = document.getElementById('licenseKey').value.trim();
             if (!inputId) { alert("Mohon masukkan ID Database Anda!"); return; }
-            await executeLogin(inputId);
+            await loadData(inputId);
         }
 
-        async function executeLogin(id) {
+        async function loadData(id) {
             currentDbId = id; startLoading("Memverifikasi Lisensi..."); 
             try {
-                db = await apiCall("getAllData"); 
-                try { localStorage.setItem('klikcrm_license_key', currentDbId); } catch(e){}
-                
-                // SETUP LINK TELEGRAM
-                document.getElementById('telegram-link').href = `https://t.me/${BOT_USERNAME}?start=${currentDbId}`;
-
-                document.getElementById('login-screen').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('login-screen').style.display = 'none';
-                    document.getElementById('app-wrapper').style.display = 'block';
-                    if(isSimulation) { document.getElementById('env-badge').innerText = "Simulation Mode"; document.getElementById('env-badge').classList.replace('bg-success', 'bg-warning'); document.getElementById('env-badge').classList.add('text-dark'); }
-                    renderUI();
-                }, 500);
+                if(typeof google !== 'undefined') {
+                    // Fallback to Native GAS Execute if hosted on GAS
+                    google.script.run
+                        .withSuccessHandler(res => { 
+                            db = typeof res === 'string' ? JSON.parse(res) : res; 
+                            db = normalizeReceivedData(db);
+                            finalizeLogin(); 
+                        })
+                        .withFailureHandler(err => { Swal.fire('Akses Ditolak', err.message, 'error'); endLoading(); })
+                        .getAllData(currentDbId);
+                } else {
+                    db = await apiCall("getAllData"); 
+                    finalizeLogin();
+                }
             } catch (error) {
                 try { localStorage.removeItem('klikcrm_license_key'); } catch(e){}
-                currentDbId = ""; Swal.fire('Akses Ditolak', error.message, 'error');
-            } finally { endLoading(); }
+                currentDbId = ""; Swal.fire('Akses Ditolak', error.message, 'error'); endLoading();
+            }
+        }
+
+        function finalizeLogin() {
+            try { localStorage.setItem('klikcrm_license_key', currentDbId); } catch(e){}
+            document.getElementById('telegram-link').href = `https://t.me/${BOT_USERNAME}?start=${currentDbId}`;
+            document.getElementById('login-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('app-wrapper').style.display = 'block';
+                if(isSimulation) { document.getElementById('env-badge').innerText = "Simulation Mode"; document.getElementById('env-badge').classList.replace('bg-success', 'bg-warning'); document.getElementById('env-badge').classList.add('text-dark'); }
+                renderUI();
+                endLoading();
+            }, 500);
         }
 
         function logout() { try { localStorage.removeItem('klikcrm_license_key'); } catch(e){} location.reload(); }
@@ -399,9 +458,7 @@
             }
 
             let today = new Date().toISOString().split('T')[0];
-            let activeLeads = [];
-            let deadLeads = [];
-            let dueLeadsCount = 0;
+            let activeLeads = []; let deadLeads = []; let dueLeadsCount = 0;
 
             db.leads.forEach(l => {
                 l._safeStatus = l.status || "Cold Lead";
@@ -419,6 +476,7 @@
                 }
             });
 
+            // Reminder Bell
             if (dueLeadsCount > 0) {
                 document.getElementById('notif-badge').innerText = dueLeadsCount; document.getElementById('notif-badge').classList.remove('d-none');
                 document.getElementById('reminder-box').classList.remove('d-none'); document.getElementById('reminder-count').innerText = dueLeadsCount;
@@ -426,20 +484,39 @@
                 document.getElementById('notif-badge').classList.add('d-none'); document.getElementById('reminder-box').classList.add('d-none');
             }
 
+            // PERBAIKAN WIN RATE
+            let totalLeadsCount = db.leads.length;
+            let wonCount = db.pipeline.filter(p => p.stage === 'Won').length;
+            let winRatePercent = totalLeadsCount > 0 ? Math.round((wonCount / totalLeadsCount) * 100) : 0;
+
             document.getElementById('dash-leads').innerText = activeLeads.length;
+            document.getElementById('dash-winrate').innerText = winRatePercent + '%';
             document.getElementById('dash-revenue').innerText = formatRupiah(db.pipeline.reduce((sum, item) => sum + Number(item.value || 0), 0));
             document.getElementById('dash-dead').innerText = deadLeads.length;
 
+            // Widget Dead List Dashboard
+            let recentDead = deadLeads.slice(0, 3);
+            let deadWidgetHtml = recentDead.length > 0 ? recentDead.map(l => `
+                <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+                    <span><b class="text-dark">${l.company}</b><br><small class="text-muted">${l.pic}</small></span>
+                    <span class="badge bg-dark">${l._safeFuCount}x FU</span>
+                </div>
+            `).join('') : '<p class="text-muted small">Belum ada data Lost.</p>';
+            document.getElementById('dash-dead-list-widget').innerHTML = deadWidgetHtml;
+
+            // Render Chart
             const ctx = document.getElementById('funnelChart').getContext('2d');
             if(funnelChartInstance) funnelChartInstance.destroy();
             funnelChartInstance = new Chart(ctx, { type: 'bar', data: { labels: STAGES, datasets: [{ data: STAGES.map(s => db.pipeline.filter(p => p.stage === s).length), backgroundColor: ['#94a3b8', '#60a5fa', '#3b82f6', '#8b5cf6', '#f59e0b', '#10b981', '#ef4444'], borderRadius: 6 }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
 
+            // Render Master Leads
             const tbLeads = document.getElementById('leads-table-body'); tbLeads.innerHTML = '';
             db.leads.forEach(l => {
                 let badgeColor = getStatusColor(l._safeStatus);
                 tbLeads.innerHTML += `<tr><td><b class="text-dark">${l.company}</b><br><small class="text-muted fw-bold">${l.id}</small></td><td>${l.pic}<br><small><i class="bi bi-whatsapp text-success"></i> ${l.phone}</small></td><td><span class="badge ${badgeColor}">${l._safeStatus}</span></td><td><b class="text-primary">${l.product}</b><br><small>${formatRupiah(l.value)}</small></td><td><button class="btn btn-sm btn-light" onclick="editLead('${l.id}')"><i class="bi bi-pencil-square"></i></button> <button class="btn btn-sm btn-light text-danger" onclick="deleteLead('${l.id}')"><i class="bi bi-trash"></i></button></td></tr>`;
             });
 
+            // Render Follow Up
             const tbFu = document.getElementById('followup-table-body'); tbFu.innerHTML = '';
             const fProd = document.getElementById('filterProduct').value; const fStat = document.getElementById('filterStatus').value;
             
@@ -463,6 +540,7 @@
                 </tr>`;
             });
 
+            // Render Dead List
             const tbDead = document.getElementById('dead-table-body'); tbDead.innerHTML = '';
             deadLeads.forEach(l => { 
                 tbDead.innerHTML += `<tr><td class="fw-bold">${l.company}<br><small><i class="bi bi-whatsapp text-success"></i> ${l.phone}</small></td><td>${l.product}</td><td><span class="badge bg-dark">${l._safeFuCount}x Follow Up</span></td><td><button class="btn btn-sm btn-danger" onclick="deleteLead('${l.id}')"><i class="bi bi-trash"></i> Hapus Permanen</button></td></tr>`; 
@@ -477,64 +555,96 @@
             const wonProjects = db.pipeline.filter(p => p.stage === 'Won');
             
             if(wonProjects.length === 0) { 
-                tbPrj.innerHTML = `<tr><td colspan="3" class="text-center text-muted py-4">Belum ada client yang mencapai tahap Deal (Won).</td></tr>`; 
+                tbPrj.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-4">Belum ada project Deal (Won).</td></tr>`; 
                 return; 
             }
 
             wonProjects.forEach(project => {
                 const leadDetail = db.leads.find(l => l.id === project.id) || {}; 
                 const productName = leadDetail.product || 'Sistem Custom';
+                
                 tbPrj.innerHTML += `<tr>
                     <td><small class="text-muted fw-bold">${project.id}</small></td>
                     <td><b class="text-dark">${project.company}</b><br><span class="badge bg-light text-dark border mt-1">${productName}</span></td>
                     <td><span class="badge bg-info text-dark">Tahap Planning</span><br><div class="progress mt-1" style="height: 5px; width: 100px;"><div class="progress-bar bg-secondary" style="width: 15%;"></div></div></td>
+                    <td class="text-end"><button class="btn btn-sm btn-outline-primary rounded-pill" onclick="openLogModal('${project.id}')"><i class="bi bi-journal-plus"></i> + Log</button></td>
                 </tr>`;
             });
         }
 
+        // FUNGSI PINDAH STAGE VIA DROPDOWN (ANTI-NYASAR DI HP)
+        async function moveStageDropdown(id, newStage) {
+            let idx = db.pipeline.findIndex(p => p.id === id);
+            if(idx > -1 && db.pipeline[idx].stage !== newStage) { 
+                db.pipeline[idx].stage = newStage; 
+                
+                let leadIdx = db.leads.findIndex(l => l.id === id);
+                if(leadIdx > -1) {
+                    if(newStage === 'Won') db.leads[leadIdx].status = 'Won';
+                    if(newStage === 'Lost') db.leads[leadIdx].status = 'Lost';
+                }
+
+                renderUI(); 
+
+                if(!isSimulation) {
+                    startLoading("Memindahkan data...");
+                    try {
+                        if(typeof google !== 'undefined') {
+                            google.script.run.savePipeline(db.pipeline[idx]);
+                            if(newStage === 'Won' || newStage === 'Lost') google.script.run.saveLead(db.leads[leadIdx]);
+                        } else {
+                            await apiCall("savePipeline", db.pipeline[idx]); 
+                            if(newStage === 'Won' || newStage === 'Lost') await apiCall("saveLead", db.leads[leadIdx]);
+                        }
+                    } catch(e) { Swal.fire('Error', e.message, 'error'); } 
+                    finally { endLoading(); }
+                } 
+            }
+        }
+
         function renderKanbanBoard() {
             const board = document.getElementById('kanban-board'); board.innerHTML = '';
+            
             STAGES.forEach(stage => {
                 const items = db.pipeline.filter(p => p.stage === stage);
-                board.innerHTML += `<div class="kanban-column"><div class="kanban-header"><span>${stage}</span><span class="badge bg-secondary">${items.length}</span></div><div class="kanban-body" data-stage="${stage}" id="kan-${stage.replace(/\s/g,'')}">${items.map(i => `<div class="kanban-card" data-id="${i.id}"><b>${i.company}</b><br><small class="text-success">${formatRupiah(i.value)}</small></div>`).join('')}</div></div>`;
+                
+                let cardsHtml = items.map(i => {
+                    let dropdownItems = STAGES.filter(s => s !== stage).map(s => `<li><a class="dropdown-item small" href="#" onclick="moveStageDropdown('${i.id}', '${s}')">Pindahkan ke ${s}</a></li>`).join('');
+                    
+                    return `
+                    <div class="kanban-card" data-id="${i.id}">
+                        <div class="d-flex justify-content-between align-items-start mb-1">
+                            <b class="text-dark">${i.company}</b>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-light py-0 px-1 border-0" data-bs-toggle="dropdown" aria-expanded="false" title="Pindahkan Data">⋮</button>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">${dropdownItems}</ul>
+                            </div>
+                        </div>
+                        <small class="text-success fw-bold">${formatRupiah(i.value)}</small>
+                    </div>`;
+                }).join('');
+
+                board.innerHTML += `<div class="kanban-column"><div class="kanban-header"><span>${stage}</span><span class="badge bg-secondary">${items.length}</span></div><div class="kanban-body" data-stage="${stage}" id="kan-${stage.replace(/\s/g,'')}">${cardsHtml}</div></div>`;
             });
+            
+            // SORTABLE JS (OPSI DRAG DI DESKTOP)
             STAGES.forEach(stage => {
                 const el = document.getElementById(`kan-${stage.replace(/\s/g,'')}`);
                 if(el) {
                     new Sortable(el, { 
-                        group: 'pipe', animation: 150, delay: 500, delayOnTouchOnly: true,
-                        onEnd: async function(evt) {
+                        group: 'pipe', animation: 150, delay: 300, delayOnTouchOnly: true,
+                        onEnd: function(evt) {
                             const id = evt.item.getAttribute('data-id'); const newStage = evt.to.getAttribute('data-stage'); 
-                            let idx = db.pipeline.findIndex(p => p.id === id);
-                            
-                            if(idx > -1 && db.pipeline[idx].stage !== newStage) { 
-                                db.pipeline[idx].stage = newStage; 
-                                
-                                // AUTO SYNC STATUS KE MASTER LEAD
-                                let leadIdx = db.leads.findIndex(l => l.id === id);
-                                if(leadIdx > -1) {
-                                    if(newStage === 'Won') db.leads[leadIdx].status = 'Won';
-                                    if(newStage === 'Lost') db.leads[leadIdx].status = 'Lost';
-                                }
-
-                                renderUI(); 
-
-                                if(!isSimulation) {
-                                    startLoading("Menyinkronkan Pipeline...");
-                                    try {
-                                        await apiCall("savePipeline", db.pipeline[idx]); 
-                                        if(newStage === 'Won' || newStage === 'Lost') {
-                                            await apiCall("saveLead", db.leads[leadIdx]);
-                                        }
-                                    } catch(e) {} finally { endLoading(); }
-                                } 
-                            }
+                            moveStageDropdown(id, newStage); 
                         }
                     });
                 }
             });
         }
 
+        // ==========================================
+        // ACTION MODALS
+        // ==========================================
         function openLeadModal() { document.getElementById('leadForm').reset(); document.getElementById('leadId').value = ''; leadModalInstance.show(); }
         
         function editLead(id) { 
@@ -564,6 +674,7 @@
 
         function openLogModal(id) { 
             const l = db.leads.find(x => x.id === id); 
+            if(!l) return;
             document.getElementById('logForm').reset(); 
             document.getElementById('logLeadId').value = l.id; 
             document.getElementById('logCompanyName').innerText = l.company;
