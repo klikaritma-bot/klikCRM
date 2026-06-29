@@ -16,10 +16,13 @@
 
     <style>
         :root { --primary: #0a192f; --brand-color: #FFB800; --secondary: #1e88e5; --accent: #10b981; --bg-color: #f3f4f6; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: #1f2937; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: #1f2937; overflow-x: hidden; padding-top: 40px; }
+
+        /* Banner Demo Overlay */
+        #demo-banner { position: fixed; top: 0; left: 0; width: 100%; background: #ef4444; color: white; text-align: center; padding: 8px; font-weight: bold; z-index: 9999; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
 
         /* Tampilan Demo (Meniru Aplikasi Asli) */
-        .sidebar { height: 100vh; width: 260px; position: fixed; top: 0; left: 0; background: var(--primary); color: white; padding-top: 20px; z-index: 1050; display: flex; flex-direction: column;}
+        .sidebar { height: 100vh; width: 260px; position: fixed; top: 0; left: 0; background: var(--primary); color: white; padding-top: 50px; z-index: 1050; display: flex; flex-direction: column;}
         .sidebar-brand { font-size: 1.35rem; font-weight: 700; text-align: center; margin-bottom: 30px; color: var(--brand-color); }
         .nav-link { color: rgba(255, 255, 255, 0.7); padding: 12px 20px; margin: 4px 15px; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
         .nav-link.active { color: var(--primary); background: var(--brand-color); font-weight: 600; }
@@ -32,14 +35,17 @@
         .stat-card.emerald { border-left-color: var(--accent); }
         .stat-card.red { border-left-color: #ef4444; }
         .stat-card.blue { border-left-color: var(--secondary); }
-        
-        /* Banner Demo Overlay */
-        #demo-banner { position: fixed; top: 0; left: 0; width: 100%; background: #ef4444; color: white; text-align: center; padding: 8px; font-weight: bold; z-index: 9999; }
-        body { padding-top: 40px; } /* Menyesuaikan banner */
 
+        /* MOBILE RESPONSIVE CSS */
+        .bottom-nav { display: none; }
         @media (max-width: 768px) {
             .sidebar { display: none !important; }
-            .main-content { margin-left: 0; padding: 15px; } 
+            .main-content { margin-left: 0; padding: 15px; padding-bottom: 85px; } 
+            .topbar { padding: 15px; margin-bottom: 20px; border-radius: 12px; }
+            .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; right: 0; background: white; box-shadow: 0 -4px 20px rgba(0,0,0,0.08); z-index: 1040; justify-content: space-around; align-items: center; padding: 12px 5px; border-radius: 20px 20px 0 0; }
+            .bottom-nav-link { display: flex; flex-direction: column; align-items: center; color: #94a3b8; font-size: 0.65rem; font-weight: 600; width: 20%; cursor: pointer; text-decoration: none;}
+            .bottom-nav-link i { font-size: 1.4rem; margin-bottom: 4px; }
+            .bottom-nav-link.active { color: var(--secondary); }
         }
     </style>
 </head>
@@ -47,25 +53,34 @@
 
     <!-- BANNER DEMO -->
     <div id="demo-banner">
-        <i class="bi bi-info-circle-fill"></i> Ini adalah Halaman Demo Interaktif. Data bersifat simulasi.
+        <i class="bi bi-info-circle-fill"></i> Ini adalah Halaman Demo Interaktif (Data Simulasi).
     </div>
 
-    <!-- SIDEBAR MOCKUP -->
+    <!-- SIDEBAR (DESKTOP MOCKUP) -->
     <nav class="sidebar" id="tour-sidebar">
         <div class="sidebar-brand"><i class="bi bi-layers-fill"></i> klikCRM Pro</div>
         <ul class="nav flex-column mb-auto">
-            <li class="nav-item"><a class="nav-link active" id="menu-dashboard"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
-            <li class="nav-item"><a class="nav-link" id="menu-leads"><i class="bi bi-people-fill"></i> Master Contact</a></li>
-            <li class="nav-item"><a class="nav-link" id="menu-followup"><i class="bi bi-telephone-outbound-fill"></i> Follow Up</a></li>
-            <li class="nav-item"><a class="nav-link" id="menu-pipeline"><i class="bi bi-kanban"></i> Sales Pipeline</a></li>
+            <li class="nav-item"><a class="nav-link active"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link"><i class="bi bi-people-fill"></i> Master Contact</a></li>
+            <li class="nav-item"><a class="nav-link"><i class="bi bi-telephone-outbound-fill"></i> Follow Up</a></li>
+            <li class="nav-item"><a class="nav-link"><i class="bi bi-kanban"></i> Sales Pipeline</a></li>
+            <li class="nav-item"><a class="nav-link"><i class="bi bi-briefcase-fill"></i> Project</a></li>
         </ul>
         
         <div class="mt-auto p-3 text-center" style="font-size:0.75rem; color:rgba(255,255,255,0.6);">
             <hr class="border-secondary mt-0">
             <p class="mb-2">&copy; 2026 <strong class="text-warning">klikSistem.com</strong></p>
-            <p class="mb-2">Butuh custom sistem lebih lengkap? Silakan kontak kami.</p>
             <a href="https://wa.me/6281328307335" target="_blank" class="btn btn-sm btn-success w-100 rounded-pill fw-bold"><i class="bi bi-whatsapp"></i> Hubungi Developer</a>
         </div>
+    </nav>
+
+    <!-- BOTTOM NAV (MOBILE MOCKUP) -->
+    <nav class="bottom-nav" id="tour-bottom-nav">
+        <div class="bottom-nav-link active"><i class="bi bi-grid-1x2-fill"></i><span>Utama</span></div>
+        <div class="bottom-nav-link"><i class="bi bi-people-fill"></i><span>Kontak</span></div>
+        <div class="bottom-nav-link"><i class="bi bi-telephone-outbound-fill"></i><span>Aktivitas</span></div>
+        <div class="bottom-nav-link"><i class="bi bi-kanban"></i><span>Pipeline</span></div>
+        <div class="bottom-nav-link"><i class="bi bi-briefcase-fill text-primary"></i><span class="text-primary fw-bold">Project</span></div>
     </nav>
 
     <!-- MAIN CONTENT MOCKUP -->
@@ -77,10 +92,10 @@
 
         <div id="dashboard">
             <!-- Alert Telegram Dummy -->
-            <div class="alert alert-info border-0 shadow-sm rounded-4 d-flex align-items-center justify-content-between mb-4" id="tour-telegram">
+            <div class="alert alert-info border-0 shadow-sm rounded-4 d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4" id="tour-telegram">
                 <div>
-                    <h6 class="fw-bold mb-1"><i class="bi bi-telegram text-primary"></i> Aktifkan Notifikasi Telegram</h6>
-                    <small>Dapatkan pengingat otomatis di HP Anda setiap pagi jika ada jadwal follow-up.</small>
+                    <h6 class="fw-bold mb-1"><i class="bi bi-telegram text-primary"></i> Aktifkan Notifikasi Telegram (Opsional)</h6>
+                    <small>Dapatkan pengingat otomatis di HP Anda setiap pagi jika ada jadwal follow-up yang jatuh tempo.</small>
                 </div>
                 <button class="btn btn-primary rounded-pill disabled"><i class="bi bi-link-45deg"></i> Hubungkan Telegram</button>
             </div>
@@ -99,7 +114,7 @@
                     <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
                         <h5 class="fw-bold mb-4">Sales Funnel</h5>
                         <div class="d-flex align-items-center justify-content-center bg-light rounded" style="height: 300px; border: 1px dashed #ccc;">
-                            <span class="text-muted">[Grafik Funnel Muncul Di Sini]</span>
+                            <span class="text-muted fw-bold"><i class="bi bi-bar-chart-fill"></i> Grafik Funnel Real-Time Muncul Di Sini</span>
                         </div>
                     </div>
                 </div>
@@ -108,45 +123,51 @@
                 <div class="col-lg-4" id="tour-deadlist">
                     <div class="card border-0 shadow-sm rounded-4 p-4 h-100 border-start border-4 border-danger bg-light">
                         <h5 class="fw-bold text-danger mb-3"><i class="bi bi-skull-fill"></i> 3 Dead Leads Terbaru</h5>
-                        <div class="border-bottom py-2"><span><b>CV Makmur Abadi</b><br><small class="text-muted">Ibu Siti</small></span></div>
-                        <div class="border-bottom py-2"><span><b>PT Global Tech</b><br><small class="text-muted">Hendra</small></span></div>
+                        <div class="border-bottom py-2"><span><b class="text-dark">CV Makmur Abadi</b><br><small class="text-muted">Ibu Siti</small></span><span class="badge bg-dark float-end">5x FU</span></div>
+                        <div class="border-bottom py-2"><span><b class="text-dark">PT Global Tech</b><br><small class="text-muted">Hendra</small></span><span class="badge bg-dark float-end">5x FU</span></div>
                         <button class="btn btn-outline-danger w-100 mt-auto pt-2 disabled">Lihat Semua Data Lost</button>
                     </div>
                 </div>
             </div>
+            
+            <div class="d-md-none mt-5 p-4 bg-white rounded-4 shadow-sm text-center">
+                <p class="mb-2 small">&copy; 2026 <strong class="text-warning">klikSistem.com</strong></p>
+                <a href="https://wa.me/6281328307335" target="_blank" class="btn btn-success rounded-pill fw-bold"><i class="bi bi-whatsapp"></i> Hubungi Developer</a>
+            </div>
         </div>
     </div>
-
-    <!-- JS EXTERNAL -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             
-            // Inisialisasi Driver.js
             const driver = window.driver.js.driver;
+            
+            // Deteksi Mobile atau Desktop untuk menyesuaikan elemen yang disorot
+            const isMobile = window.innerWidth <= 768;
+            const navElement = isMobile ? '#tour-bottom-nav' : '#tour-sidebar';
+            const navPosition = isMobile ? 'top' : 'right';
 
             const tourObj = driver({
                 showProgress: true,
-                allowClose: false, // Memaksa pengguna mengikuti tour
+                allowClose: false, // Wajib ikut sampai akhir
                 nextBtnText: 'Lanjutkan &rarr;',
                 prevBtnText: '&larr; Kembali',
                 doneBtnText: 'Selesai!',
                 steps: [
                     {
-                        element: '#tour-sidebar',
+                        element: navElement,
                         popover: {
-                            title: 'Selamat Datang di klikCRM Pro 👋',
-                            description: 'Ini adalah pusat kendali bisnis Anda. Di menu kiri ini, Anda dapat mengelola seluruh alur penjualan dalam satu pintu.',
-                            side: "right",
+                            title: 'Pusat Navigasi 🧭',
+                            description: 'Ini adalah pusat kendali Anda. Gunakan menu ini untuk berpindah antara Master Contact, Kanban Pipeline, hingga Manajemen Project.',
+                            side: navPosition,
                             align: 'start'
                         }
                     },
                     {
                         element: '#tour-stats',
                         popover: {
-                            title: 'Dashboard Analitik Cerdas 📊',
-                            description: 'Pantau kesehatan bisnis secara Real-Time. Lihat berapa banyak prospek masuk, persentase penutupan penjualan (Win Rate), hingga nilai uang yang sedang berputar di Pipeline Anda.',
+                            title: 'Dashboard Analitik 📊',
+                            description: 'Pantau kesehatan bisnis secara Real-Time. Lihat total leads masuk, persentase closing (Win Rate), hingga potensi rupiah di Pipeline Anda.',
                             side: "bottom",
                             align: 'start'
                         }
@@ -155,35 +176,17 @@
                         element: '#tour-telegram',
                         popover: {
                             title: 'Auto-Reminder Telegram 🤖',
-                            description: 'Tidak perlu takut lupa Follow Up! Fitur eksklusif ini akan mengirimkan notifikasi otomatis ke Telegram Anda setiap pagi untuk mengingatkan jadwal klien.',
+                            description: 'Fitur Eksklusif! Sambungkan dengan Telegram untuk menerima notifikasi otomatis setiap pagi jika ada jadwal Follow-Up yang jatuh tempo.',
                             side: "bottom",
                             align: 'start'
                         }
                     },
                     {
-                        element: '#menu-leads',
+                        element: '#tour-funnel',
                         popover: {
-                            title: 'Tahap 1: Database Prospek 🗄️',
-                            description: 'Langkah awal dimulai di sini. Tinggalkan Excel, masukkan data prospek (Leads) baru Anda di Master Contact. Sistem akan langsung mencatatnya.',
-                            side: "right",
-                            align: 'center'
-                        }
-                    },
-                    {
-                        element: '#menu-pipeline',
-                        popover: {
-                            title: 'Tahap 2: Visualisasi Kanban 📈',
-                            description: 'Data yang baru dimasukkan otomatis menjadi "Kartu" di Sales Pipeline. Geser kartu sesuai perkembangan negosiasi (Need Analysis, Proposal, dst) agar proses penjualan lebih terstruktur.',
-                            side: "right",
-                            align: 'center'
-                        }
-                    },
-                    {
-                        element: '#menu-followup',
-                        popover: {
-                            title: 'Tahap 3: Tindakan Follow Up 📞',
-                            description: 'Menu ini mengurutkan klien mana yang paling genting untuk dihubungi hari ini. Anda bisa langsung chat WA atau mencatat hasil telepon langsung dari sini.',
-                            side: "right",
+                            title: 'Visualisasi Funnel 📈',
+                            description: 'Grafik ini akan terbentuk otomatis untuk menunjukkan di mana proses penjualan Anda paling banyak terhambat (bottleneck).',
+                            side: isMobile ? "top" : "left",
                             align: 'center'
                         }
                     },
@@ -191,24 +194,24 @@
                         element: '#tour-deadlist',
                         popover: {
                             title: 'Sistem Deteksi "Dead Lead" ⚠️',
-                            description: 'Jika klien sudah 5x di-follow up tanpa hasil, atau Anda geser statusnya menjadi Lost, sistem akan menaruhnya di sini agar energi Anda tidak habis untuk prospek yang gagal.',
-                            side: "left",
+                            description: 'Jika prospek sudah di-follow up 5x tanpa hasil, sistem akan memisahkannya ke sini agar energi tim Anda tidak terbuang sia-sia.',
+                            side: isMobile ? "top" : "left",
                             align: 'center'
                         }
                     },
                     {
                         popover: {
-                            title: 'Siap Menggunakan klikCRM? 🚀',
-                            description: 'Hentikan penggunaan banyak aplikasi yang merepotkan. Gabungkan Database, Segmentasi, Follow-Up, dan Analitik dalam satu tempat bersama klikCRM Pro.<br><br><div class="text-center mt-3"><a href="https://wa.me/6281328307335" class="btn btn-success" target="_blank"><i class="bi bi-whatsapp"></i> Hubungi Developer Sekarang</a></div>',
+                            title: 'Siap Tingkatkan Penjualan? 🚀',
+                            description: 'Tinggalkan Excel dan chat WA yang berantakan. Gabungkan Database, Segmentasi, Follow-Up, dan Analitik dalam satu sistem cerdas.<br><br><div class="text-center mt-3"><a href="https://wa.me/6281328307335" class="btn btn-success" target="_blank"><i class="bi bi-whatsapp"></i> Order klikCRM Sekarang</a></div>',
                         }
                     }
                 ]
             });
 
-            // Jalankan Tour otomatis setelah halaman termuat
+            // Jalankan Tour otomatis
             setTimeout(() => {
                 tourObj.drive();
-            }, 1000);
+            }, 800);
 
         });
     </script>
