@@ -39,6 +39,7 @@
         .kanban-header { padding: 15px; font-weight: 700; border-bottom: 2px solid #e2e8f0; display: flex; justify-content: space-between; color: var(--text-dark); }
         .kanban-body { padding: 10px; flex-grow: 1; min-height: 200px; }
         .kanban-card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.04); cursor: grab; border-left: 4px solid var(--secondary); position: relative; }
+        .kanban-card:active { cursor: grabbing; }
         
         #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 10001; display: none; flex-direction: column; justify-content: center; align-items: center; }
 
@@ -126,6 +127,8 @@
             <div class="bottom-nav-link" onclick="switchView('leads')"><i class="bi bi-people-fill"></i><span>Kontak</span></div>
             <div class="bottom-nav-link" onclick="switchView('followup')"><i class="bi bi-telephone-outbound-fill"></i><span>Follow Up</span></div>
             <div class="bottom-nav-link" onclick="switchView('pipeline')"><i class="bi bi-kanban"></i><span>Pipeline</span></div>
+            <!-- FIX: Menu Project Mobile Dikembalikan -->
+            <div class="bottom-nav-link" onclick="switchView('projects')"><i class="bi bi-briefcase-fill"></i><span>Project</span></div>
         </nav>
 
         <div class="main-content">
@@ -144,7 +147,8 @@
                         <h6 class="fw-bold mb-1"><i class="bi bi-telegram text-primary"></i> Aktifkan Notifikasi Telegram (Opsional)</h6>
                         <small>Dapatkan pengingat otomatis di HP Anda setiap pagi jika ada jadwal follow-up yang jatuh tempo.</small>
                     </div>
-                    <a id="telegram-link" href="#" target="_blank" class="btn btn-primary rounded-pill fw-semibold"><i class="bi bi-link-45deg"></i> Hubungkan Telegram</a>
+                    <!-- FIX: Menggunakan href javascript void agar tidak membuka blank tab jika id belum digenerate -->
+                    <a id="telegram-link" href="javascript:void(0)" target="_blank" class="btn btn-primary rounded-pill fw-semibold"><i class="bi bi-link-45deg"></i> Hubungkan Telegram</a>
                 </div>
 
                 <div class="row g-3 mb-4">
@@ -526,7 +530,11 @@
             isSimulation = false; currentDbId = rawInput.trim(); 
             try {
                 db = await apiCall("getAllData");
-                if (teleBanner) { teleBanner.style.display = 'flex'; teleLink.href = `https://t.me/${BOT_USERNAME}?start=${currentDbId}`; }
+                if (teleBanner) { 
+                    teleBanner.style.display = 'flex'; 
+                    // FIX: Set link URL Telegram dinamis dengan ID Lisensi
+                    teleLink.href = `https://t.me/${BOT_USERNAME}?start=${currentDbId}`; 
+                }
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('app-container').style.display = 'block';
                 localStorage.setItem('klikcrm_session_id', currentDbId);
@@ -578,7 +586,8 @@
                     <div class="kanban-body" id="kanban-${stage.replace(/\s+/g, '-')}" data-stage="${stage}">
                         ${stageItems.map(item => `
                         <div class="kanban-card" data-id="${item.id}">
-                            <i class="bi bi-three-dots float-end text-muted" style="cursor:pointer;"></i>
+                            <!-- FIX: Ikon Titik Tiga Diperjelas -->
+                            <i class="bi bi-three-dots float-end text-muted fs-5" style="cursor:grab;" title="Geser Kartu"></i>
                             <div class="fw-bold mb-1 text-dark">${item.company}</div>
                             <small class="text-primary fw-bold">${formatRupiah(item.value)}</small>
                         </div>`).join('')}
@@ -590,7 +599,7 @@
                 if (col && typeof Sortable !== 'undefined') { new Sortable(col, { group: 'pipeline', animation: 150, onEnd: function (evt) { updatePipelineStage(evt.item.getAttribute('data-id'), evt.to.getAttribute('data-stage')); } }); }
             });
             
-            // 4. Projects Table (+Log Button Sudah Bisa Diklik)
+            // 4. Projects Table 
             const pbody = document.getElementById('projects-table-body'); pbody.innerHTML = '';
             db.pipeline.filter(p => p.stage === 'Won').forEach(p => { 
                 let leadInfo = db.leads.find(l => l.id === p.id);
@@ -629,7 +638,7 @@
             filterSelect.innerHTML = optionsHtml;
         }
 
-        // 6. Follow Up Table (+Log Button Sudah Bisa Diklik)
+        // 6. Follow Up Table
         function renderFollowUpTable() {
             const tbody = document.getElementById('followup-table-body'); tbody.innerHTML = '';
             let filtered = db.leads.filter(l => l.status !== 'Lost' && l.status !== 'Won' && l.status !== 'Loyal');
