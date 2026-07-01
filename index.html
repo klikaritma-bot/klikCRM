@@ -127,7 +127,6 @@
             <div class="bottom-nav-link" onclick="switchView('leads')"><i class="bi bi-people-fill"></i><span>Kontak</span></div>
             <div class="bottom-nav-link" onclick="switchView('followup')"><i class="bi bi-telephone-outbound-fill"></i><span>Follow Up</span></div>
             <div class="bottom-nav-link" onclick="switchView('pipeline')"><i class="bi bi-kanban"></i><span>Pipeline</span></div>
-            <!-- FIX: Menu Project Mobile Dikembalikan -->
             <div class="bottom-nav-link" onclick="switchView('projects')"><i class="bi bi-briefcase-fill"></i><span>Project</span></div>
         </nav>
 
@@ -147,8 +146,7 @@
                         <h6 class="fw-bold mb-1"><i class="bi bi-telegram text-primary"></i> Aktifkan Notifikasi Telegram (Opsional)</h6>
                         <small>Dapatkan pengingat otomatis di HP Anda setiap pagi jika ada jadwal follow-up yang jatuh tempo.</small>
                     </div>
-                    <!-- FIX: Menggunakan href javascript void agar tidak membuka blank tab jika id belum digenerate -->
-                    <a id="telegram-link" href="javascript:void(0)" target="_blank" class="btn btn-primary rounded-pill fw-semibold"><i class="bi bi-link-45deg"></i> Hubungkan Telegram</a>
+                    <a id="telegram-link" href="#" target="_blank" class="btn btn-primary rounded-pill fw-semibold"><i class="bi bi-link-45deg"></i> Hubungkan Telegram</a>
                 </div>
 
                 <div class="row g-3 mb-4">
@@ -324,7 +322,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
     <script>
-        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyXxQo-HLqNhCPdZruQPcfE7dWnSUfggjUpZcHMEHMcWK9_d8KVIqDImAehT0F1ZhsGQw/exec";
+        // PENTING: Jika menggunakan API sendiri, ganti "MASUKKAN_URL_WEB_APP..." ini
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwMl2BHMMtZuLaochuGHSeWLKmtbH_67PCwdl5bBJUxuFH3sFBIHShfH4mN-8M8Ft--eQ/exec";
         const BOT_USERNAME = "klikCRM_notif_bot";
         
         let db = { leads: [], pipeline: [], followup: [], projects: [] };
@@ -496,7 +495,7 @@
         }
 
         // =========================================================================
-        // MANUAL LOGIN (DEMO & PRODUKSI)
+        // MANUAL LOGIN (DEMO & PRODUKSI) - FIX TAUTAN TELEGRAM DITAMPATKAN AWAL
         // =========================================================================
         async function manualLogin() {
             const rawInput = document.getElementById('licenseKey').value;
@@ -512,10 +511,16 @@
             const teleBanner = document.getElementById('telegram-banner');
             const teleLink = document.getElementById('telegram-link');
             
+            // FIX: Set Link Telegram SEBELUM fetch API. Agar jika API error/belum diset, tombol telegram tetap bekerja
+            currentDbId = inputId === 'DEMO' ? 'DEMO' : rawInput.trim();
+            if (teleBanner && teleLink) {
+                teleBanner.style.display = 'flex'; // Selalu tampilkan agar klien bisa mengklik
+                teleLink.href = `https://t.me/${BOT_USERNAME}?start=${currentDbId}`;
+            }
+
             // JIKA KETIK DEMO
             if (inputId === 'DEMO') {
-                isSimulation = true; currentDbId = "DEMO";
-                if (teleBanner) teleBanner.style.display = 'none'; 
+                isSimulation = true; 
                 try {
                     db = await apiCall("getAllData");
                     document.getElementById('login-screen').style.display = 'none';
@@ -527,20 +532,16 @@
             }
 
             // JIKA PRODUKSI ASLI
-            isSimulation = false; currentDbId = rawInput.trim(); 
+            isSimulation = false; 
             try {
                 db = await apiCall("getAllData");
-                if (teleBanner) { 
-                    teleBanner.style.display = 'flex'; 
-                    // FIX: Set link URL Telegram dinamis dengan ID Lisensi
-                    teleLink.href = `https://t.me/${BOT_USERNAME}?start=${currentDbId}`; 
-                }
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('app-container').style.display = 'block';
                 localStorage.setItem('klikcrm_session_id', currentDbId);
                 renderUI();
             } catch (error) {
-                if(typeof Swal !== 'undefined') Swal.fire('Akses Ditolak', 'Gagal memuat data.', 'error');
+                // Jangan sembunyikan aplikasi kalau error, biarkan mereka tahu API-nya belum diisi
+                if(typeof Swal !== 'undefined') Swal.fire('Akses Ditolak', 'Pastikan URL API Google Script Anda sudah benar di kode.', 'error');
             } finally { endLoading(); }
         }
 
@@ -576,7 +577,7 @@
                 </tr>`;
             });
             
-            // 3. Kanban Pipeline
+            // 3. Kanban Pipeline (FIX: Tambah Dropdown Klik Titik Tiga)
             const board = document.getElementById('kanban-board'); board.innerHTML = '';
             STAGES.forEach(stage => {
                 const stageItems = db.pipeline.filter(p => p.stage === stage);
@@ -586,9 +587,14 @@
                     <div class="kanban-body" id="kanban-${stage.replace(/\s+/g, '-')}" data-stage="${stage}">
                         ${stageItems.map(item => `
                         <div class="kanban-card" data-id="${item.id}">
-                            <!-- FIX: Ikon Titik Tiga Diperjelas -->
-                            <i class="bi bi-three-dots float-end text-muted fs-5" style="cursor:grab;" title="Geser Kartu"></i>
-                            <div class="fw-bold mb-1 text-dark">${item.company}</div>
+                            <div class="dropdown float-end">
+                                <i class="bi bi-three-dots text-muted fs-5" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;" title="Pilih Pindah Tahap"></i>
+                                <ul class="dropdown-menu shadow-sm">
+                                    <li><h6 class="dropdown-header">Pindah ke:</h6></li>
+                                    ${STAGES.map(s => `<li><a class="dropdown-item ${s === stage ? 'bg-light text-primary fw-bold' : ''}" href="javascript:void(0)" onclick="updatePipelineStage('${item.id}', '${s}')">${s}</a></li>`).join('')}
+                                </ul>
+                            </div>
+                            <div class="fw-bold mb-1 text-dark pe-3">${item.company}</div>
                             <small class="text-primary fw-bold">${formatRupiah(item.value)}</small>
                         </div>`).join('')}
                     </div>
@@ -599,7 +605,7 @@
                 if (col && typeof Sortable !== 'undefined') { new Sortable(col, { group: 'pipeline', animation: 150, onEnd: function (evt) { updatePipelineStage(evt.item.getAttribute('data-id'), evt.to.getAttribute('data-stage')); } }); }
             });
             
-            // 4. Projects Table 
+            // 4. Projects Table
             const pbody = document.getElementById('projects-table-body'); pbody.innerHTML = '';
             db.pipeline.filter(p => p.stage === 'Won').forEach(p => { 
                 let leadInfo = db.leads.find(l => l.id === p.id);
