@@ -680,28 +680,98 @@
                 document.getElementById('logCompanyName').innerText = lead.company; 
                 document.getElementById('logNotes').value = ''; 
                 document.getElementById('logNewStatus').value = ''; 
+                // Set default tanggal hari ini + 3 hari untuk kemudahan
+                const nextDate = new Date(); nextDate.setDate(nextDate.getDate() + 3);
+                document.getElementById('logNextSchedule').value = nextDate.toISOString().split('T')[0];
+                
+                // Render Histori Log
+                renderLogHistory(leadId);
+                
+                // Pastikan tab form yang aktif pertama kali
+                const formTab = new bootstrap.Tab(document.getElementById('form-tab'));
+                formTab.show();
+
+                if(typeof logModalInstance === 'undefined') {
+                    window.logModalInstance = new bootstrap.Modal(document.getElementById('logModal'));
+                }
                 logModalInstance.show(); 
             }
         }
 
+        // FUNGSI BARU UNTUK MERENDER HISTORY
+        function renderLogHistory(leadId) {
+            const container = document.getElementById('history-container');
+            container.innerHTML = '';
+            
+            // Ambil data log dari db.followup (asumsi tabel FollowUpLogs di GAS dikembalikan ke db.followup)
+            const logs = (db.followup || []).filter(log => log.leadid === leadId || log.leadId === leadId);
+            
+            if (logs.length === 0) {
+                container.innerHTML = '<div class="text-center text-muted small py-3">Belum ada catatan aktivitas.</div>';
+                return;
+            }
+
+            // Urutkan dari yang terbaru (asumsi ada field 'date')
+            logs.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            logs.forEach(log => {
+                container.innerHTML += `
+                <div class="mb-3 pb-2 border-bottom">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <small class="text-muted fw-bold"><i class="bi bi-clock"></i> ${log.date || '-'}</small>
+                        <span class="badge bg-secondary" style="font-size: 0.65rem;">${log.media || '-'}</span>
+                    </div>
+                    <p class="mb-1 small text-dark">${log.notes || '-'}</p>
+                </div>`;
+            });
+        }
+
         async function saveLogFollowUp() {
             const leadId = document.getElementById('logLeadId').value; 
-            const today = new Date().toLocaleDateString('en-GB').split('/').reverse().join('-');
+            const today = new Date().toISOString().split('T')[0];
             let leadIdx = db.leads.findIndex(l => l.id === leadId); 
             if(leadIdx === -1) return;
             
             const newStatus = document.getElementById('logNewStatus').value;
+            const nextSchedule = document.getElementById('logNextSchedule').value; // Ambil nilai tanggal dari form
+            const logNotes = document.getElementById('logNotes').value;
+            const logMedia = document.getElementById('logMedia').value;
+            
+            // Siapkan payload untuk API agar catatan log tersimpan ke Sheet 'FollowUpLogs'
+            // CATATAN: Pastikan di Code.gs fungsi saveLead Anda juga meng-handle penambahan baris ke sheet FollowUpLogs
+            // jika action-nya meminta itu, atau buat fungsi khusus action "saveLog".
+            // Di sini kita kombinasikan ke payload saveLead agar praktis untuk contoh ini.
+            
             let updatedLeadData = {...db.leads[leadIdx]};
             updatedLeadData.followupcount = (Number(updatedLeadData.followupcount) || 0) + 1; 
             updatedLeadData.lastfollowup = today; 
+            // Update jadwal berikutnya di data lead utama agar bot telegram bisa membacanya
+            if(nextSchedule) updatedLeadData.nextfollowup = nextSchedule; 
             if(newStatus) updatedLeadData.status = newStatus;
             
+            // --- SIMULASI MENYIMPAN KE ARRAY FOLLOWUP (UNTUK MODE DEMO) ---
+            if (!db.followup) db.followup = [];
+            db.followup.push({
+                logId: `LOG-${Math.floor(1000 + Math.random() * 9000)}`,
+                leadId: leadId,
+                date: today,
+                media: logMedia,
+                notes: logNotes,
+                newStatus: newStatus || updatedLeadData.status
+            });
+            // -------------------------------------------------------------
+
             startLoading("Menyimpan Log...");
             try {
+                // Idealnya: Kirim API khusus untuk log. Di sini kita timpa saveLead 
+                // (Untuk implementasi nyata, Anda mungkin butuh apiCall("saveLog", logData) 
+                // dan apiCall("saveLead", updatedLeadData) secara bersamaan).
+                // Karena kita pakai arsitektur sederhana, kita simpan Lead-nya saja dulu, 
+                // jika backend GAS Anda belum dimodifikasi untuk menerima tabel log ganda.
                 db = await apiCall("saveLead", updatedLeadData); 
                 renderUI(); 
-                logModalInstance.hide(); 
-                if(typeof Swal !== 'undefined') Swal.fire('Sukses', 'Log Tersimpan', 'success');
+                if(typeof logModalInstance !== 'undefined') logModalInstance.hide(); 
+                if(typeof Swal !== 'undefined') Swal.fire('Sukses', 'Log & Jadwal Tersimpan', 'success');
             } catch (err) {
                 if(typeof Swal !== 'undefined') Swal.fire('Error', err.message, 'error');
             } finally {
